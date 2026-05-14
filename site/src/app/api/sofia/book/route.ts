@@ -37,6 +37,17 @@ import { company } from "@/content/site";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// LLMs often send `null` for unset optional fields. Strip them so .optional()
+// works as expected and we don't reject valid calls.
+function stripNulls(input: unknown): unknown {
+  if (input && typeof input === "object" && !Array.isArray(input)) {
+    return Object.fromEntries(
+      Object.entries(input as Record<string, unknown>).filter(([, v]) => v !== null),
+    );
+  }
+  return input;
+}
+
 const Schema = z.object({
   name: z.string().min(2).max(120),
   phone: z.string().min(8).max(20),
@@ -99,6 +110,7 @@ export async function POST(request: Request) {
 
   let body: unknown;
   try { body = await request.json(); } catch { body = {}; }
+  body = stripNulls(body);
   const parsed = Schema.safeParse(body);
   if (!parsed.success) {
     // Detailed log for debugging — shows exactly which field Sofia sent wrong.
