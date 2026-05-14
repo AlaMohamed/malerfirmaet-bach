@@ -451,6 +451,78 @@ interface AdminLeadEmail {
     startedAtIso: string;
     durationMs: number | null;
   }>;
+  /**
+   * Drive upload outcome — surfaced as a visible row in the email so
+   * Adam knows whether attached images made it to Drive or not.
+   * Shape mirrors UploadedLead from lib/drive.ts so the caller can pass
+   * the value through directly.
+   */
+  driveStatus?: {
+    attempted: number;
+    uploaded: number;
+    folderUrl: string | null;
+    stub: boolean;
+    error?: { stage: string; message: string; details?: string };
+  };
+  /** Stable submission ID for traceability across logs + integrations. */
+  submissionId?: string;
+}
+
+/**
+ * Render the Drive-status row of the admin email. Three states:
+ *   - no files attached + no error  → "—"
+ *   - some/all files uploaded ok    → green checkmark + link to folder
+ *   - upload failed at any stage    → red warning with which stage broke
+ */
+function driveStatusRow(status: AdminLeadEmail["driveStatus"]): string | null {
+  if (!status) return null;
+
+  const { attempted, uploaded, folderUrl, stub, error } = status;
+
+  if (attempted === 0 && !error) {
+    return detailRow("Vedhæftede billeder", "<span style=\"color:#9ca3af\">Ingen filer vedhæftet</span>");
+  }
+
+  if (error) {
+    const stageLabel: Record<string, string> = {
+      config: "Drive ikke konfigureret",
+      auth: "Autentificering mislykkedes",
+      folder: "Mappe kunne ikke oprettes",
+      file: "Fil-upload mislykkedes",
+      unknown: "Ukendt fejl",
+    };
+    const label = stageLabel[error.stage] ?? error.stage;
+    return detailRow(
+      "Vedhæftede billeder",
+      `<span style="color:#DC2626;font-weight:600">⚠ ${escapeHtml(label)}</span><br>
+       <span style="color:#7F1D1D;font-size:13px">${escapeHtml(error.message)}</span>
+       ${error.details ? `<br><span style="color:#9ca3af;font-size:11px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace">${escapeHtml(error.details).slice(0, 280)}</span>` : ""}
+       ${attempted > 0 ? `<br><span style="color:#7F1D1D;font-size:12px;margin-top:4px;display:inline-block">${attempted} fil(er) gik tabt — bed kunden gensende dem.</span>` : ""}`,
+    );
+  }
+
+  if (stub) {
+    return detailRow(
+      "Vedhæftede billeder",
+      `<span style="color:#9ca3af">${attempted} fil(er) — Drive er ikke aktiveret (stub mode)</span>`,
+    );
+  }
+
+  if (uploaded === 0 && attempted > 0) {
+    return detailRow(
+      "Vedhæftede billeder",
+      `<span style="color:#DC2626;font-weight:600">⚠ Ingen filer kom igennem</span>`,
+    );
+  }
+
+  const partial = uploaded < attempted ? ` (af ${attempted})` : "";
+  const linkPart = folderUrl
+    ? `<br><a href="${escapeHtml(folderUrl)}" style="color:#7a9e9a;text-decoration:underline;font-size:13px">Åbn mappen i Google Drive →</a>`
+    : "";
+  return detailRow(
+    "Vedhæftede billeder",
+    `<span style="color:#16A34A;font-weight:600">✓ ${uploaded}${partial} fil(er) uploadet</span>${linkPart}`,
+  );
 }
 
 /**
@@ -544,17 +616,36 @@ export async function sendAdminLeadNotification(opts: AdminLeadEmail): Promise<{
     detailRow(
       "E-mail",
       `<a href="mailto:${escapeHtml(opts.customerEmail)}" style="color:#7a9e9a;text-decoration:none;font-weight:500">${escapeHtml(opts.customerEmail)}</a>`,
-      { last: !opts.context },
     ),
   ];
+
+  // Drive status row goes right after contact info so a failed upload is
+  // immediately visible without scrolling. Skip when caller didn't pass it.
+  const driveRow = driveStatusRow(opts.driveStatus);
+  if (driveRow) rows.push(driveRow);
+
   if (opts.context) {
     rows.push(
       detailRow(
         "Detaljer",
         `<span style="white-space:pre-wrap">${escapeHtml(opts.context).replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" style="color:#7a9e9a;text-decoration:underline">$1</a>')}</span>`,
+      ),
+    );
+  }
+
+  if (opts.submissionId) {
+    rows.push(
+      detailRow(
+        "Submission ID",
+        `<span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#9ca3af">${escapeHtml(opts.submissionId)}</span>`,
         { last: true },
       ),
     );
+  } else {
+    // Mark the last actual row as terminal so the divider line is suppressed
+    // when no submissionId is provided.
+    const lastIdx = rows.length - 1;
+    rows[lastIdx] = rows[lastIdx]!.replace(/;border-bottom:1px solid #ECEAE3/, "");
   }
 
   const body =

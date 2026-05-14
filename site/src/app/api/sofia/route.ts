@@ -3,6 +3,7 @@ import { z } from "zod";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { createOutboundCall, findCallsForPhone, isRetellConfigured } from "@/lib/retell";
 import { sendAdminLeadNotification } from "@/lib/email";
+import { logEvent, newSubmissionContext } from "@/lib/submission-log";
 
 /**
  * POST /api/sofia
@@ -63,24 +64,35 @@ function normalizePhone(raw: string): string {
 }
 
 export async function POST(request: Request) {
+  const ctx = newSubmissionContext("sofia-callback", request);
+  logEvent(ctx, { area: "lifecycle", status: "ok", note: "submission-started" });
+
   try {
     const body = await request.json();
     const parsed = Schema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ ok: false, error: "validation-failed" }, { status: 400 });
+      logEvent(
+        ctx,
+        { area: "validation", status: "invalid", note: "zod-failed", meta: parsed.error.flatten() },
+        "warn",
+      );
+      return NextResponse.json({ ok: false, error: "validation-failed", submission_id: ctx.id }, { status: 400 });
     }
 
     // Honeypot — bots fill any visible field
     if (parsed.data.website.trim() !== "") {
-      return NextResponse.json({ ok: true });
+      logEvent(ctx, { area: "honeypot", status: "invalid", note: "bot-detected" }, "warn");
+      return NextResponse.json({ ok: true, submission_id: ctx.id });
     }
 
     // Turnstile
     const ip = request.headers.get("cf-connecting-ip") ?? request.headers.get("x-forwarded-for") ?? undefined;
     const verify = await verifyTurnstile(parsed.data.turnstileToken, ip);
     if (!verify.ok) {
-      return NextResponse.json({ ok: false, error: "captcha-failed" }, { status: 400 });
+      logEvent(ctx, { area: "turnstile", status: "failed" }, "warn");
+      return NextResponse.json({ ok: false, error: "captcha-failed", submission_id: ctx.id }, { status: 400 });
     }
+    logEvent(ctx, { area: "turnstile", status: "ok" });
 
     const phoneE164 = normalizePhone(parsed.data.telefon);
     // SOFIA_TEST_MODE=true bypasses the business-hours check so we can test
@@ -101,15 +113,24 @@ export async function POST(request: Request) {
         toNumber: phoneE164,
         customerName: parsed.data.navn,
         customerEmail: parsed.data.email,
-        metadata: { source: "ring-mig-op-form" },
+        metadata: { source: "ring-mig-op-form", submission_id: ctx.id },
       });
       callTriggered = r.ok && !r.stub;
       scheduledFor = "asap";
-      console.log("[sofia] Outbound call:", { triggered: callTriggered, stub: r.stub ?? false, callId: r.callId });
+      logEvent(ctx, {
+        area: "retell-call",
+        status: callTriggered ? "ok" : r.stub ? "stub" : "failed",
+        meta: { callId: r.callId, stub: r.stub ?? false, error: r.error },
+      }, callTriggered ? "info" : "warn");
     } else {
       // Outside hours OR no phone number yet — Sofia ringer ikke nu
       scheduledFor = withinHours ? "asap" : "next-business-day";
-      console.log("[sofia] Call NOT triggered:", { withinHours, retellConfigured });
+      logEvent(ctx, {
+        area: "retell-call",
+        status: "skipped",
+        note: withinHours ? "retell-not-configured" : "outside-business-hours",
+        meta: { withinHours, retellConfigured },
+      });
     }
 
     // Always notify Adam — sikkerhedsnet
@@ -129,22 +150,46 @@ export async function POST(request: Request) {
       ? undefined
       : await findCallsForPhone(phoneE164).catch(() => []);
 
-    await sendAdminLeadNotification({
+    const adminResult = await sendAdminLeadNotification({
       customerName: parsed.data.navn,
       customerPhone: phoneE164,
       customerEmail: parsed.data.email,
       source: "sofia-callback",
       context: note,
       sofiaHistory,
+      submissionId: ctx.id,
+    }).catch((err) => {
+      logEvent(
+        ctx,
+        { area: "email-admin", status: "failed", meta: { reason: String(err).slice(0, 200) } },
+        "error",
+      );
+      return { ok: false } as const;
     });
+    if (adminResult && (adminResult as { ok: boolean }).ok) {
+      logEvent(ctx, { area: "email-admin", status: "ok" });
+    }
+
+    logEvent(ctx, { area: "lifecycle", status: "ok", note: "submission-completed" });
 
     return NextResponse.json({
       ok: true,
       callTriggered,
       scheduledFor,
+      submission_id: ctx.id,
     });
   } catch (err) {
+    logEvent(
+      ctx,
+      {
+        area: "lifecycle",
+        status: "failed",
+        note: "unhandled-exception",
+        meta: { message: err instanceof Error ? err.message : String(err) },
+      },
+      "error",
+    );
     console.error("[sofia] error", err);
-    return NextResponse.json({ ok: false, error: "server-error" }, { status: 500 });
+    return NextResponse.json({ ok: false, error: "server-error", submission_id: ctx.id }, { status: 500 });
   }
 }
