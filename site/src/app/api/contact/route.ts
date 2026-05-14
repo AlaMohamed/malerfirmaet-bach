@@ -88,12 +88,25 @@ export async function POST(request: Request) {
       files.push({ name: f.name, type: f.type, bytes: buf });
     }
 
-    // upload to Drive
-    const drive = await uploadLead({
-      customer: parsed.data.navn,
-      source: "kontakt",
-      files,
-    });
+    // Upload to Drive — non-blocking. Drive failures (bad credentials,
+    // network blip, folder permissions) must NOT lose the lead. We capture
+    // them and continue so the customer still gets a confirmation email
+    // and Adam still gets a notification.
+    let drive: Awaited<ReturnType<typeof uploadLead>> = {
+      folderId: null,
+      folderUrl: null,
+      uploaded: [],
+      stub: true,
+    };
+    try {
+      drive = await uploadLead({
+        customer: parsed.data.navn,
+        source: "kontakt",
+        files,
+      });
+    } catch (err) {
+      console.error("[contact] drive upload failed (non-fatal):", err);
+    }
 
     const lead = {
       ...parsed.data,
