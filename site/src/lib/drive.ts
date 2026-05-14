@@ -232,17 +232,37 @@ export async function uploadLead(opts: {
   }
 
   if (fileErrors.length > 0 && uploaded.length === 0) {
-    // Folder created but no files actually landed — surface as error.
+    // All file uploads failed — most often the "Service Accounts do not
+    // have storage quota" 403 when the parent is a personal-Gmail Drive
+    // folder. The folder we just created would be an empty orphan
+    // cluttering Adam's Drive on every submission, so delete it here.
+    // Best-effort: if cleanup itself fails we just log; the form has
+    // already succeeded from the user's perspective and the photos are
+    // safe as email attachments.
+    if (folderId) {
+      try {
+        await drive.files.delete({ fileId: folderId, supportsAllDrives: true });
+        console.log("[drive] cleaned up empty orphan folder", folderId);
+      } catch (cleanupErr) {
+        console.warn("[drive] orphan folder cleanup failed", folderId, cleanupErr);
+      }
+    }
+    // Detect the specific "no storage quota" error so we can give Adam an
+    // actionable message instead of dumping the raw Google response.
+    const joined = fileErrors.join(" | ");
+    const isQuota = /storage quota|shared drive|oauth delegation/i.test(joined);
     return {
-      folderId,
-      folderUrl,
+      folderId: null,
+      folderUrl: null,
       uploaded,
       stub: false,
       attempted,
       error: {
         stage: "file",
-        message: `${fileErrors.length} fil(er) kunne ikke uploades`,
-        details: fileErrors.join(" | "),
+        message: isQuota
+          ? `Personlig Gmail-Drive accepterer ikke service-account uploads. Skift til en Shared Drive (Google Workspace) for at fixe permanent.`
+          : `${fileErrors.length} fil(er) kunne ikke uploades`,
+        details: joined,
       },
     };
   }
