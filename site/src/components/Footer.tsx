@@ -116,10 +116,15 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-white/8 flex flex-col sm:flex-row justify-between items-center gap-3 text-cream-200/35 text-xs">
-          <p>© {year} {company.name}. Alle rettigheder forbeholdes.</p>
-          <p className="tracking-wider">
-            CVR {company.cvrFormatted} · {company.address.street} · {company.address.postal} {company.address.city}
+        <div className="mt-16 pt-8 border-t border-white/8 text-cream-200/35 text-xs">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+            <p>© {year} {company.name}. Alle rettigheder forbeholdes.</p>
+            <p className="tracking-wider">
+              CVR {company.cvrFormatted} · {company.address.street} · {company.address.postal} {company.address.city}
+            </p>
+          </div>
+          <p className="mt-4 text-center text-cream-200/30 tracking-wider">
+            Designet af Nordsales
           </p>
         </div>
       </Container>
