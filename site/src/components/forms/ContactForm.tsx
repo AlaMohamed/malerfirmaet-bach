@@ -9,6 +9,60 @@ import { TurnstileBox } from "./TurnstileBox";
 
 type Status = "idle" | "submitting" | "error";
 
+// Server error codes → user-facing Danish. When zod fails, the API returns
+// `details.fieldErrors` so we can name the exact field instead of dumping
+// "validation-failed". Submission ID is appended when present so the user
+// can quote it back to support if needed.
+const FIELD_LABELS: Record<string, string> = {
+  navn: "Navn",
+  telefon: "Telefonnummer",
+  email: "E-mail",
+  besked: "Beskrivelse af opgaven",
+  adresse: "Adresse",
+  opgavetype: "Opgavetype",
+  samtykke: "Accept af privatlivspolitik",
+};
+
+function translateContactError(data: {
+  error?: string;
+  details?: { fieldErrors?: Record<string, string[]>; formErrors?: string[] };
+  submission_id?: string;
+}): string {
+  const base = (() => {
+    switch (data.error) {
+      case "captcha-failed":
+        return "Bekræft venligst at du ikke er en robot — vent et øjeblik og prøv igen.";
+      case "validation-failed": {
+        const fields = data.details?.fieldErrors ?? {};
+        const bad = Object.keys(fields).filter((k) => fields[k]?.length);
+        if (bad.length === 1) {
+          const label = FIELD_LABELS[bad[0]!] ?? bad[0];
+          return `Feltet "${label}" er ikke udfyldt korrekt.`;
+        }
+        if (bad.length > 1) {
+          const labels = bad.map((k) => FIELD_LABELS[k] ?? k).join(", ");
+          return `Tjek venligst disse felter: ${labels}.`;
+        }
+        return "Et eller flere felter er ikke udfyldt korrekt.";
+      }
+      case "rate-limited":
+        return "For mange forsøg på kort tid. Vent et minut og prøv igen.";
+      case "too-many-files":
+        return "For mange filer — vedhæft højst 5 billeder.";
+      case "invalid-file-type":
+        return "Filtypen understøttes ikke. Brug JPG, PNG eller HEIC.";
+      case "total-size-exceeded":
+        return "Billederne er for store — max 20 MB i alt.";
+      case "server-error":
+        return "Der opstod en intern fejl. Prøv igen om et øjeblik, eller ring til os.";
+      default:
+        return data.error ?? "Kunne ikke sende forespørgsel. Prøv venligst igen.";
+    }
+  })();
+  // Surface the submission_id so the user (or Adam) can reference it later.
+  return data.submission_id ? `${base} (Reference: ${data.submission_id})` : base;
+}
+
 export function ContactForm() {
   const router = useRouter();
   const [status, setStatus] = useState<Status>("idle");
@@ -38,7 +92,11 @@ export function ContactForm() {
       const r = await fetch("/api/contact", { method: "POST", body: fd });
       if (!r.ok) {
         const data = await r.json().catch(() => ({}));
-        throw new Error(data.error ?? "Kunne ikke sende. Prøv venligst igen.");
+        // Log structured details to the browser console — helpful when Adam
+        // is on a support call with a customer who can't get the form to
+        // submit. Devtools shows the raw error response.
+        console.warn("[contact] submission failed", { status: r.status, data });
+        throw new Error(translateContactError(data));
       }
       router.push("/tak");
     } catch (err) {
