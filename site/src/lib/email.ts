@@ -453,6 +453,16 @@ interface AdminLeadEmail {
   };
   /** Stable submission ID for traceability across logs + integrations. */
   submissionId?: string;
+  /**
+   * Optional file attachments — image buffers from the contact form. Used
+   * as a Drive-fallback (and convenience): even when Drive succeeds, the
+   * admin gets the photos inline in their inbox so they don't have to
+   * click out to view them.
+   *
+   * Resend's per-message cap is ~40 MB total; the contact form already
+   * caps uploads at 20 MB so we're well within budget.
+   */
+  attachments?: Array<{ filename: string; content: Buffer }>;
 }
 
 /**
@@ -479,26 +489,33 @@ function driveStatusRow(status: AdminLeadEmail["driveStatus"]): string | null {
       unknown: "Ukendt fejl",
     };
     const label = stageLabel[error.stage] ?? error.stage;
+    // When Drive fails, the same N files are still attached to this very
+    // email — make that crystal clear so Adam doesn't think the photos
+    // are lost.
+    const fallbackLine =
+      attempted > 0
+        ? `<br><span style="color:#16A34A;font-size:13px;font-weight:500;margin-top:6px;display:inline-block">✓ Billederne er vedhæftet denne mail i stedet — se nederst.</span>`
+        : "";
     return detailRow(
       "Vedhæftede billeder",
-      `<span style="color:#DC2626;font-weight:600">⚠ ${escapeHtml(label)}</span><br>
+      `<span style="color:#DC2626;font-weight:600">⚠ Drive: ${escapeHtml(label)}</span><br>
        <span style="color:#7F1D1D;font-size:13px">${escapeHtml(error.message)}</span>
        ${error.details ? `<br><span style="color:#9ca3af;font-size:11px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace">${escapeHtml(error.details).slice(0, 280)}</span>` : ""}
-       ${attempted > 0 ? `<br><span style="color:#7F1D1D;font-size:12px;margin-top:4px;display:inline-block">${attempted} fil(er) gik tabt — bed kunden gensende dem.</span>` : ""}`,
+       ${fallbackLine}`,
     );
   }
 
   if (stub) {
     return detailRow(
       "Vedhæftede billeder",
-      `<span style="color:#9ca3af">${attempted} fil(er) — Drive er ikke aktiveret (stub mode)</span>`,
+      `<span style="color:#9ca3af">${attempted} fil(er) — Drive ikke aktiveret</span><br><span style="color:#16A34A;font-size:13px;font-weight:500">✓ Billederne er vedhæftet denne mail.</span>`,
     );
   }
 
   if (uploaded === 0 && attempted > 0) {
     return detailRow(
       "Vedhæftede billeder",
-      `<span style="color:#DC2626;font-weight:600">⚠ Ingen filer kom igennem</span>`,
+      `<span style="color:#DC2626;font-weight:600">⚠ Ingen filer kom igennem til Drive</span><br><span style="color:#16A34A;font-size:13px;font-weight:500">✓ Billederne er vedhæftet denne mail.</span>`,
     );
   }
 
@@ -508,7 +525,7 @@ function driveStatusRow(status: AdminLeadEmail["driveStatus"]): string | null {
     : "";
   return detailRow(
     "Vedhæftede billeder",
-    `<span style="color:#16A34A;font-weight:600">✓ ${uploaded}${partial} fil(er) uploadet</span>${linkPart}`,
+    `<span style="color:#16A34A;font-weight:600">✓ ${uploaded}${partial} fil(er) uploadet</span>${linkPart}<br><span style="color:#9ca3af;font-size:12px">+ vedhæftet denne mail som backup</span>`,
   );
 }
 
@@ -677,6 +694,14 @@ export async function sendAdminLeadNotification(opts: AdminLeadEmail): Promise<{
     opts.context ? `\nDetaljer:\n${opts.context}` : "",
   ].filter(Boolean).join("\n");
 
+  // Attach image buffers (if any). Convert to base64 inline — Resend
+  // accepts both Buffer and base64 string but base64 is more portable
+  // across SDK versions.
+  const attachments = (opts.attachments ?? []).map((a) => ({
+    filename: a.filename,
+    content: a.content.toString("base64"),
+  }));
+
   const r = await client.emails.send({
     from: `${company.name} <${from}>`,
     to,
@@ -684,6 +709,7 @@ export async function sendAdminLeadNotification(opts: AdminLeadEmail): Promise<{
     subject,
     html,
     text,
+    ...(attachments.length > 0 ? { attachments } : {}),
   });
 
   if (r.error) {

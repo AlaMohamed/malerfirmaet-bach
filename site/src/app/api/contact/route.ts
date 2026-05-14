@@ -215,6 +215,17 @@ export async function POST(request: Request) {
 
     // 8. Send admin + customer emails in parallel — neither blocks the
     //    response on failure (Promise.allSettled catches everything).
+    //
+    // We attach the customer's image buffers DIRECTLY to the admin email
+    // as a Drive fallback. Two reasons:
+    //   1. Personal Gmail-Drive folders can't accept service-account
+    //      writes (no quota) — until Adam moves to a Shared Drive, this
+    //      ensures Adam still gets the photos.
+    //   2. Even with Drive working, having photos inline saves a click.
+    // Resend's per-message cap is ~40 MB; our form caps uploads at 20 MB,
+    // so we stay well inside the budget.
+    const adminAttachments = files.map((f) => ({ filename: f.name, content: f.bytes }));
+
     const [adminMail, customerMail] = await Promise.allSettled([
       sendAdminLeadNotification({
         customerName: parsed.data.navn,
@@ -231,6 +242,7 @@ export async function POST(request: Request) {
           error: drive.error,
         },
         submissionId: ctx.id,
+        attachments: adminAttachments,
       }),
       sendContactConfirmation({
         to: parsed.data.email,
