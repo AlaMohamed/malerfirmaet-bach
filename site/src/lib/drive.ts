@@ -151,6 +151,13 @@ export async function uploadLead(opts: {
   }
 
   // 2. Create the sub-folder
+  //
+  // supportsAllDrives: true is REQUIRED when the parent folder lives in a
+  // Shared Drive (Team Drive). Without it Drive returns a misleading
+  // "HTTP 404 File not found" even when the service account is a member
+  // of the Shared Drive — Google's API only searches "My Drive" by
+  // default. We always set the flag (it's a no-op for personal-Drive
+  // folders) so both shared-drive and personal-drive setups work.
   const parent = process.env.GOOGLE_DRIVE_FOLDER_ID!;
   const folderName = `${timestampSlug()} — ${safeName(opts.customer)} (${opts.source})`;
 
@@ -164,11 +171,21 @@ export async function uploadLead(opts: {
         parents: [parent],
       },
       fields: "id, webViewLink",
+      supportsAllDrives: true,
     });
     folderId = folder.data.id ?? null;
     folderUrl = folder.data.webViewLink ?? null;
   } catch (err) {
     console.error("[drive] folder creation failed", err);
+    const detail = describeError(err);
+    // 404 on the parent ID almost always means one of:
+    //   a) Folder is in a Shared Drive and supportsAllDrives wasn't honored
+    //      (shouldn't happen now that we set it) → service account isn't a
+    //      member of the Shared Drive.
+    //   b) Folder ID is wrong (typo, or folder was deleted/replaced).
+    //   c) Folder is in someone's personal Drive and never shared with the
+    //      service account email.
+    const isNotFound = /404|not found/i.test(detail);
     return {
       folderId: null,
       folderUrl: null,
@@ -177,8 +194,10 @@ export async function uploadLead(opts: {
       attempted,
       error: {
         stage: "folder",
-        message: "Kunne ikke oprette undermappe i Google Drive",
-        details: describeError(err),
+        message: isNotFound
+          ? "Mappen kan ikke ses af service account (404). Tjek: (1) GOOGLE_DRIVE_FOLDER_ID matcher en eksisterende mappe, (2) service account-emailen er tilføjet som Editor på mappen, (3) hvis det er en Shared Drive er service account-emailen tilføjet som Content Manager i selve drevet."
+          : "Kunne ikke oprette undermappe i Google Drive",
+        details: detail,
       },
     };
   }
@@ -198,6 +217,7 @@ export async function uploadLead(opts: {
           body: Readable.from(f.bytes),
         },
         fields: "id, webViewLink",
+        supportsAllDrives: true,
       });
       uploaded.push({
         name: f.name,
