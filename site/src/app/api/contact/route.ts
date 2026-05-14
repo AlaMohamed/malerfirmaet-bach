@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { uploadLead } from "@/lib/drive";
+import { sendAdminLeadNotification, sendContactConfirmation } from "@/lib/email";
 
 /**
  * Contact form endpoint (multipart).
@@ -104,7 +105,48 @@ export async function POST(request: Request) {
 
     console.log("[contact] Lead modtaget:", lead);
 
-    // TODO when MAKE_CONTACT_WEBHOOK_URL is set
+    // Build the admin notification context with everything Adam needs to act
+    // on this lead manually. Includes Drive folder link if upload succeeded.
+    const adminContext = [
+      parsed.data.opgavetype ? `Opgavetype: ${parsed.data.opgavetype}` : null,
+      parsed.data.adresse ? `Adresse: ${parsed.data.adresse}` : null,
+      `Besked:\n${parsed.data.besked}`,
+      drive.folderUrl ? `\nDrive-mappe (billeder): ${drive.folderUrl}` : null,
+      drive.uploaded && drive.uploaded.length > 0
+        ? `Filer uploaded: ${drive.uploaded.length}`
+        : null,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    // Fire both emails in parallel so a slow Resend response doesn't double
+    // the form's perceived latency. Either failing only logs — the form
+    // submission itself still succeeds (we've already stored the lead).
+    const [adminMail, customerMail] = await Promise.allSettled([
+      sendAdminLeadNotification({
+        customerName: parsed.data.navn,
+        customerPhone: parsed.data.telefon,
+        customerEmail: parsed.data.email,
+        source: "kontakt",
+        context: adminContext,
+      }),
+      sendContactConfirmation({
+        to: parsed.data.email,
+        customerName: parsed.data.navn,
+        besked: parsed.data.besked,
+        opgavetype: parsed.data.opgavetype || undefined,
+        adresse: parsed.data.adresse || undefined,
+      }),
+    ]);
+
+    if (adminMail.status === "rejected") {
+      console.error("[contact] admin mail failed:", adminMail.reason);
+    }
+    if (customerMail.status === "rejected") {
+      console.error("[contact] customer mail failed:", customerMail.reason);
+    }
+
+    // TODO Make.com webhook — implementeres i morgen (per Adam 14/5)
     // if (process.env.MAKE_CONTACT_WEBHOOK_URL) {
     //   await fetch(process.env.MAKE_CONTACT_WEBHOOK_URL, {
     //     method: "POST",
@@ -112,8 +154,6 @@ export async function POST(request: Request) {
     //     body: JSON.stringify(lead),
     //   });
     // }
-
-    // TODO when RESEND_API_KEY is set — confirm to customer + notify admin
 
     return NextResponse.json({ ok: true });
   } catch (err) {

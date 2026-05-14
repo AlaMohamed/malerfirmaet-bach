@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { CookieBanner } from "@/components/CookieBanner";
 import { company } from "@/content/site";
@@ -70,6 +72,12 @@ export default function RootLayout({
       <body className="bg-cream-200 text-charcoal antialiased">
         {children}
         <CookieBanner />
+        {/* Vercel Analytics + Speed Insights — privacy-friendly, no cookies,
+            GDPR-compliant by default (anonymous aggregate data only).
+            Activated unconditionally; Vercel respects DNT and never sets
+            tracking cookies. */}
+        <Analytics />
+        <SpeedInsights />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

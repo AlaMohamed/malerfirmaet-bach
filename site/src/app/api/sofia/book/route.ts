@@ -81,7 +81,7 @@ const REASON_MAP: Record<string, { status: number; sofiaMessage: string }> = {
   "outside-working-hours": {
     status: 422,
     sofiaMessage:
-      "Det tidspunkt ligger uden for Adams arbejdstid (man-fre 07:30–17:00). Bed kunden vælge en anden tid fra check_availability.",
+      "Det tidspunkt ligger uden for Adams arbejdstid (man-fre 07:00–17:30). Bed kunden vælge en anden tid fra check_availability.",
   },
   "slot-taken": {
     status: 409,

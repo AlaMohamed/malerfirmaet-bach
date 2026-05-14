@@ -67,8 +67,14 @@ export default function KontaktPage() {
 }
 
 function ContactBlock({ icon: Icon, label, value, href, sub }: { icon: React.ComponentType<{ className?: string }>; label: string; value: string; href?: string; sub?: string }) {
-  const inner = (
-    <div className="flex items-center gap-4 bg-cream-50 rounded-xl border border-warm-light/60 p-5 hover:border-brand-300 transition-colors">
+  // The visible box styling lives on the outermost element (Link OR div).
+  // Putting it on the inner div while leaving the Link bare makes the anchor
+  // render as inline display by default and the focus ring lands on a 0px
+  // outline that bleeds outside the visible card — looks like a stray border.
+  const cardClass =
+    "flex items-center gap-4 bg-cream-50 rounded-xl border border-warm-light/60 p-5 transition-colors hover:border-brand-300 focus-visible:outline-none focus-visible:border-brand-300 focus-visible:ring-2 focus-visible:ring-brand-300/40";
+  const content = (
+    <>
       <div className="h-10 w-10 rounded-md bg-brand-50 grid place-items-center shrink-0">
         <Icon className="h-4 w-4 text-brand-500" />
       </div>
@@ -77,7 +83,13 @@ function ContactBlock({ icon: Icon, label, value, href, sub }: { icon: React.Com
         <p className="font-medium text-charcoal-dark text-sm">{value}</p>
         {sub && <p className="text-xs text-warm-gray mt-0.5">{sub}</p>}
       </div>
-    </div>
+    </>
   );
-  return href ? <Link href={href}>{inner}</Link> : inner;
+  return href ? (
+    <Link href={href} className={cardClass}>
+      {content}
+    </Link>
+  ) : (
+    <div className={cardClass}>{content}</div>
+  );
 }
