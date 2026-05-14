@@ -1,0 +1,55 @@
+# --- Secrets ---
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.example
+
+# Service Account JSON keys (Google Cloud)
+*service-account*.json
+*credentials*.json
+
+# --- Dependencies ---
+node_modules/
+.pnp
+.pnp.js
+
+# --- Build artifacts ---
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+
+# --- Vercel ---
+.vercel/
+
+# --- Logs ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# --- Editor / OS ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+.history/
+
+# --- Test output ---
+coverage/
+.nyc_output
+
+# --- Temporary ---
+*.tmp
+tmp/
+
+# --- Internal docs we don't need to share publicly ---
+# (Uncomment if you want to keep PARQ login info private)
+# ../PARQ - Login oplysninger
+
+# --- Image optimization originals (we keep optimized versions only) ---
+# All images are already optimized via scripts/optimize-images.js

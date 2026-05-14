@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privatlivspolitik | Malerfirmaet Bach ApS</title>
+  <meta name="description" content="Læs om hvordan Malerfirmaet Bach ApS behandler dine personoplysninger." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%237a9e9a'/><text y='.85em' x='50%' text-anchor='middle' font-size='62'>🎨</text></svg>" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { brand: '#7a9e9a', charcoal: '#2d3748', chardark: '#1a202c', offwhite: '#F7F6F2', warmgray: '#718096' }, fontFamily: { serif: ['Playfair Display', 'serif'], sans: ['Inter', 'sans-serif'] } } }
+    }
+  </script>
+</head>
+<body class="bg-offwhite text-charcoal font-sans">
+  <header class="bg-white border-b border-gray-200/50 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center group" aria-label="Malerfirmaet Bach ApS – forside">
+        <img src="images/logo.png" alt="Malerfirmaet Bach ApS" class="h-12 w-auto max-w-[220px]" />
+      </a>
+      <a href="index.html" class="text-sm text-warmgray hover:text-charcoal transition-colors flex items-center gap-1.5">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Tilbage til forsiden
+      </a>
+    </div>
+  </header>
+  <main class="max-w-3xl mx-auto px-6 py-16">
+    <h1 class="font-serif text-4xl font-medium mb-3">Privatlivspolitik</h1>
+    <p class="text-warmgray text-sm mb-10">Sidst opdateret: Januar 2025</p>
+    <div class="prose prose-gray max-w-none space-y-6 text-sm leading-relaxed text-warmgray">
+      <section>
+        <h2 class="font-serif text-xl font-medium text-charcoal mb-3">1. Dataansvarlig</h2>
+        <p>Malerfirmaet Bach ApS, CVR 44 07 11 50, Høje Gladsaxe 68, 2860 Søborg er dataansvarlig for behandlingen af dine personoplysninger. Kontakt os på <a href="mailto:info@malerfirmaetbach.dk" class="text-brand underline">info@malerfirmaetbach.dk</a> eller <a href="tel:41440711" class="text-brand underline">41 44 07 11</a>.</p>
+      </section>
+      <section>
+        <h2 class="font-serif text-xl font-medium text-charcoal mb-3">2. Hvilke oplysninger indsamler vi?</h2>
+        <p>Vi indsamler de oplysninger, du giver os via kontaktformularen: navn, telefonnummer, e-mailadresse og beskrivelse af din opgave. Vi indsamler ikke følsomme personoplysninger.</p>
+      </section>
+      <section>
+        <h2 class="font-serif text-xl font-medium text-charcoal mb-3">3. Formål og retsgrundlag</h2>
+        <p>Vi behandler dine oplysninger for at kunne besvare din henvendelse og sende dig et tilbud. Retsgrundlaget er dit samtykke (GDPR art. 6, stk. 1, litra a) og vores legitime interesse i at drive virksomhed (art. 6, stk. 1, litra f).</p>
+      </section>
+      <section>
+        <h2 class="font-serif text-xl font-medium text-charcoal mb-3">4. Opbevaring og sletning</h2>
+        <p>Vi opbevarer dine oplysninger så længe, det er nødvendigt for at opfylde formålet, dog maksimalt 3 år efter seneste kontakt, medmindre lovgivning kræver længere opbevaring.</p>
+      </section>
+      <section>
+        <h2 class="font-serif text-xl font-medium text-charcoal mb-3">5. Dine rettigheder</h2>
+        <p>Du har ret til indsigt, berigtigelse, sletning, begrænsning og dataportabilitet. Du kan til enhver tid trække dit samtykke tilbage. Kontakt os på <a href="mailto:info@malerfirmaetbach.dk" class="text-brand underline">info@malerfirmaetbach.dk</a>. Du kan klage til Datatilsynet på <a href="https://www.datatilsynet.dk" target="_blank" rel="noopener" class="text-brand underline">datatilsynet.dk</a>.</p>
+      </section>
+      <section>
+        <h2 class="font-serif text-xl font-medium text-charcoal mb-3">6. Cookies</h2>
+        <p>Vi bruger kun teknisk nødvendige cookies. Læs mere i vores <a href="cookiepolitik.html" class="text-brand underline">cookiepolitik</a>.</p>
+      </section>
+    </div>
+  </main>
+  <footer class="bg-chardark text-white py-8 px-6 mt-16">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-white/30 text-xs">
+      <p>© <span id="year"></span> Malerfirmaet Bach ApS · CVR 44 07 11 50</p>
+      <div class="flex gap-5">
+        <a href="privatlivspolitik.html" class="hover:text-white transition-colors">Privatlivspolitik</a>
+        <a href="cookiepolitik.html" class="hover:text-white transition-colors">Cookiepolitik</a>
+      </div>
+    </div>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

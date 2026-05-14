@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projekter | Malerfirmaet Bach ApS</title>
+  <meta name="description" content="Se vores udvalgte projekter — fra hotelrenoveringer til børnehaver. Malerfirmaet Bach ApS leverer kvalitetsmaling i København og på Sjælland." />
+  <meta property="og:title" content="Projekter – Malerfirmaet Bach ApS" />
+  <meta property="og:description" content="Se vores udvalgte projekter — fra hotelrenoveringer til børnehaver." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://malerfirmaetbach.dk/projekter.html" />
+  <meta property="og:image" content="https://malerfirmaetbach.dk/images/img_28.jpg" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%237a9e9a'/><text y='.85em' x='50%' text-anchor='middle' font-size='62'>🎨</text></svg>" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script defer data-domain="malerfirmaetbach.dk" src="https://plausible.io/js/script.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand:    '#7a9e9a',
+            branddk:  '#5a7e7a',
+            charcoal: '#2d3748',
+            chardark: '#1a202c',
+            offwhite: '#F7F6F2',
+            warmgray: '#718096',
+            lightgray:'#E2E8F0',
+          },
+          fontFamily: {
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            sans:  ['Inter', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background-color: #F7F6F2; color: #2d3748; }
+    h1, h2, h3, h4 { font-family: 'Playfair Display', Georgia, serif; }
+
+    /* Filter buttons */
+    .filter-btn {
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      border-radius: 9999px;
+    }
+    .filter-btn.active {
+      background-color: #2d3748;
+      color: #ffffff;
+      border-color: #2d3748;
+    }
+    .filter-btn:not(.active):hover {
+      border-color: #7a9e9a;
+      color: #2d3748;
+    }
+
+    /* Project cards */
+    .project-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .project-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(45,55,72,0.12);
+    }
+    .project-card .card-img img {
+      transition: transform 0.55s ease;
+    }
+    .project-card:hover .card-img img {
+      transform: scale(1.07);
+    }
+
+    /* Lightbox */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(26,32,44,0.95);
+      align-items: center;
+      justify-content: center;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox-img { max-width: 90vw; max-height: 85vh; object-fit: contain; }
+
+    /* Before/after slider */
+    .ba-container { position: relative; overflow: hidden; cursor: col-resize; user-select: none; }
+    .ba-after { position: absolute; inset: 0; overflow: hidden; }
+    .ba-divider {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: white;
+      cursor: col-resize;
+      z-index: 10;
+    }
+    .ba-handle {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px; height: 40px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      z-index: 11;
+    }
+
+    /* Fade-in */
+    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* Hidden project card */
+    .project-card.hidden-card {
+      display: none;
+    }
+
+    /* Nav scroll */
+    .nav-scrolled { box-shadow: 0 1px 20px rgba(45,55,72,0.08); }
+
+    :focus-visible { outline: 2px solid #7a9e9a; outline-offset: 3px; }
+  </style>
+</head>
+<body class="bg-offwhite text-charcoal">
+
+  <!-- ===== COOKIE BANNER ===== -->
+  <div id="cookie-banner" role="region" aria-label="Cookie-samtykke" aria-live="polite"
+       class="fixed bottom-0 left-0 right-0 z-50 bg-charcoal text-white px-6 py-5 shadow-2xl"
+       style="display:none">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <p class="text-white/50 text-xs leading-relaxed flex-1">Vi bruger kun nødvendige cookies. <a href="cookiepolitik.html" class="underline hover:text-white transition-colors">Læs cookiepolitik.</a></p>
+      <div class="flex gap-3 shrink-0">
+        <button id="cookie-ok" class="bg-brand text-white text-sm font-medium px-5 py-2 hover:bg-branddk transition-colors">Accepter</button>
+        <button id="cookie-necessary" class="border border-white/30 text-white/70 text-sm font-medium px-4 py-2 hover:bg-white/10 transition-colors">Kun nødvendige</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== NAVIGATION ===== -->
+  <header id="site-header" class="fixed top-0 left-0 right-0 z-40 bg-offwhite/96 backdrop-blur-sm border-b border-gray-200/50 transition-shadow duration-300">
+    <nav class="max-w-7xl mx-auto px-6 lg:px-12 h-16 flex items-center justify-between" aria-label="Primær navigation">
+      <a href="index.html" class="flex items-center group" aria-label="Malerfirmaet Bach ApS – forside">
+        <img src="images/logo.png" alt="Malerfirmaet Bach ApS" class="h-12 w-auto max-w-[220px]" />
+      </a>
+      <div class="hidden md:flex items-center gap-7 text-sm font-medium text-warmgray">
+        <a href="index.html#services" class="hover:text-charcoal transition-colors">Ydelser</a>
+        <a href="index.html#proces" class="hover:text-charcoal transition-colors">Proces</a>
+        <a href="index.html#om-os" class="hover:text-charcoal transition-colors">Om os</a>
+        <a href="projekter.html" class="text-charcoal font-semibold border-b-2 border-brand pb-0.5">Projekter</a>
+        <a href="tel:41440711" class="text-brand font-semibold hover:text-branddk transition-colors flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          41 44 07 11
+        </a>
+        <a href="index.html#kontakt" class="ml-1 bg-charcoal text-white text-sm px-5 py-2.5 hover:bg-chardark transition-colors">Få tilbud</a>
+      </div>
+      <button id="mobile-menu-btn" class="md:hidden p-2 text-charcoal" aria-label="Åbn menu" aria-expanded="false">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </nav>
+    <div id="mobile-menu" class="hidden md:hidden bg-offwhite border-t border-gray-200/50 px-6 py-4 space-y-1">
+      <a href="index.html#services" class="block text-sm font-medium text-warmgray hover:text-charcoal py-2.5 border-b border-gray-100">Ydelser</a>
+      <a href="index.html#proces" class="block text-sm font-medium text-warmgray hover:text-charcoal py-2.5 border-b border-gray-100">Proces</a>
+      <a href="index.html#om-os" class="block text-sm font-medium text-warmgray hover:text-charcoal py-2.5 border-b border-gray-100">Om os</a>
+      <a href="projekter.html" class="block text-sm font-semibold text-charcoal py-2.5 border-b border-gray-100">Projekter</a>
+      <a href="tel:41440711" class="block text-sm font-semibold text-brand py-2.5 border-b border-gray-100">41 44 07 11</a>
+      <a href="index.html#kontakt" class="block bg-charcoal text-white text-sm font-medium px-5 py-3 text-center mt-3">Få tilbud</a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ===== PAGE HERO ===== -->
+    <section class="relative pt-32 pb-16 px-6 lg:px-12 bg-charcoal text-white overflow-hidden" aria-label="Projekter hero">
+      <!-- Background image with overlay -->
+      <div class="absolute inset-0">
+        <img src="images/img_28.jpg" alt="" class="w-full h-full object-cover opacity-20" aria-hidden="true" />
+      </div>
+      <div class="relative z-10 max-w-7xl mx-auto">
+        <nav aria-label="Brødkrumme" class="flex items-center gap-2 text-white/40 text-xs mb-8">
+          <a href="index.html" class="hover:text-white transition-colors">Forside</a>
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          <span class="text-white/70">Projekter</span>
+        </nav>
+        <p class="text-xs font-medium tracking-widest uppercase text-brand/80 mb-4">Vores arbejde</p>
+        <h1 class="font-serif text-5xl md:text-6xl font-medium mb-5">Vores projekter</h1>
+        <p class="text-white/60 text-lg max-w-xl leading-relaxed">Fra hotelrenoveringer til børnehaver — se resultater fra vores seneste opgaver i København og på Sjælland.</p>
+      </div>
+    </section>
+
+    <!-- ===== FILTER + GRID ===== -->
+    <section class="py-16 px-6 lg:px-12 bg-offwhite" aria-labelledby="projekter-grid-heading">
+      <div class="max-w-7xl mx-auto">
+
+        <!-- Filter tabs -->
+        <div class="mb-12 fade-in" role="group" aria-label="Filtrer projekter efter kategori">
+          <div class="flex flex-wrap gap-2" id="filter-buttons">
+            <button class="filter-btn active border border-charcoal bg-charcoal text-white text-sm font-medium px-5 py-2.5 rounded-full" data-filter="alle" aria-pressed="true">
+              Alle projekter
+            </button>
+            <button class="filter-btn border border-gray-300 text-warmgray text-sm font-medium px-5 py-2.5 rounded-full" data-filter="erhverv" aria-pressed="false">
+              Erhverv
+            </button>
+            <button class="filter-btn border border-gray-300 text-warmgray text-sm font-medium px-5 py-2.5 rounded-full" data-filter="institutioner" aria-pressed="false">
+              Institutioner
+            </button>
+          </div>
+          <!-- Count -->
+          <p id="project-count" class="text-warmgray text-sm mt-4">Viser <span id="count-num">3</span> projekter</p>
+        </div>
+
+        <!-- Projects grid -->
+        <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-label="Projektliste">
+
+          <!-- PROJECT 1: Herlev Kro & Hotel -->
+          <article class="project-card bg-white border border-gray-100 overflow-hidden fade-in" data-category="erhverv" data-project="hotel">
+            <div class="card-img overflow-hidden relative">
+              <img src="images/img_28.jpg" alt="Herlev Kro &amp; Hotel – renoveret hotelværelse, efter" class="w-full h-56 object-cover rounded-t-xl" loading="lazy" />
+              <div class="absolute top-3 left-3 flex gap-2">
+                <span class="bg-charcoal/80 text-white text-[10px] font-semibold uppercase tracking-widest px-2.5 py-1">Erhverv</span>
+              </div>
+            </div>
+            <div class="p-6">
+              <h2 class="font-serif text-xl font-medium mb-1">Herlev Kro &amp; Hotel</h2>
+              <p class="text-warmgray text-sm mb-4">Totalrenovering af hotelværelser, gange og fællesarealer.</p>
+              <button class="text-sm font-medium text-brand hover:text-branddk transition-colors flex items-center gap-1.5 project-expand-btn" data-project="hotel" aria-expanded="false" aria-controls="project-hotel-detail">
+                Se projekt
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </article>
+
+          <!-- PROJECT 2: Børnehaven Vibevænget -->
+          <article class="project-card bg-white border border-gray-100 overflow-hidden fade-in" data-category="institutioner" data-project="vibevænget">
+            <div class="card-img overflow-hidden relative">
+              <img src="images/img_14.jpg" alt="Børnehaven Vibevænget, Bagsværd – malet legehus, efter" class="w-full h-56 object-cover rounded-t-xl" loading="lazy" />
+              <div class="absolute top-3 left-3 flex gap-2">
+                <span class="bg-brand/85 text-white text-[10px] font-semibold uppercase tracking-widest px-2.5 py-1">Institutioner</span>
+              </div>
+            </div>
+            <div class="p-6">
+              <h2 class="font-serif text-xl font-medium mb-1">Børnehaven Vibevænget</h2>
+              <p class="text-warmgray text-sm mb-4">Maling og renovering af legehuse og udendørs træværk, Bagsværd.</p>
+              <button class="text-sm font-medium text-brand hover:text-branddk transition-colors flex items-center gap-1.5 project-expand-btn" data-project="vibevænget" aria-expanded="false" aria-controls="project-vibevænget-detail">
+                Se projekt
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </article>
+
+          <!-- PROJECT 3: Børnehaven Ved Fortet -->
+          <article class="project-card bg-white border border-gray-100 overflow-hidden fade-in" data-category="institutioner" data-project="vedfortet">
+            <div class="card-img overflow-hidden relative">
+              <img src="images/img_48.jpg" alt="Børnehaven Ved Fortet – malede legepladsehuse, efter" class="w-full h-56 object-cover rounded-t-xl" loading="lazy" />
+              <div class="absolute top-3 left-3 flex gap-2">
+                <span class="bg-brand/85 text-white text-[10px] font-semibold uppercase tracking-widest px-2.5 py-1">Institutioner</span>
+              </div>
+            </div>
+            <div class="p-6">
+              <h2 class="font-serif text-xl font-medium mb-1">Børnehaven Ved Fortet</h2>
+              <p class="text-warmgray text-sm mb-4">Totalrenovering af legeplads, facade og udendørs træstrukturer.</p>
+              <button class="text-sm font-medium text-brand hover:text-branddk transition-colors flex items-center gap-1.5 project-expand-btn" data-project="vedfortet" aria-expanded="false" aria-controls="project-vedfortet-detail">
+                Se projekt
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- No results message -->
+        <div id="no-results" class="hidden text-center py-16 text-warmgray">
+          <p class="font-serif text-2xl mb-2">Ingen projekter fundet</p>
+          <p class="text-sm">Prøv en anden kategori.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== PROJECT DETAIL PANELS ===== -->
+
+    <!-- Hotel detail -->
+    <div id="project-hotel-detail" class="hidden bg-white border-t border-gray-100 py-16 px-6 lg:px-12" aria-label="Projektdetaljer: Herlev Kro &amp; Hotel">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-center justify-between mb-10">
+          <div>
+            <p class="text-xs font-medium tracking-widest uppercase text-brand mb-2">Erhverv · Totalrenovering</p>
+            <h2 class="font-serif text-3xl md:text-4xl font-medium">Herlev Kro &amp; Hotel</h2>
+          </div>
+          <button class="project-close-btn text-warmgray hover:text-charcoal transition-colors p-2" data-project="hotel" aria-label="Luk projektdetaljer">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Project info bar -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 p-6 bg-offwhite border border-gray-100 rounded-xl">
+          <div>
+            <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-1">Kunde</p>
+            <p class="font-medium text-sm">Herlev Kro &amp; Hotel</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-1">Kategori</p>
+            <p class="font-medium text-sm">Erhverv</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-1">Ydelse</p>
+            <p class="font-medium text-sm">Totalrenovering</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-1">Lokation</p>
+            <p class="font-medium text-sm">Herlev</p>
+          </div>
+        </div>
+
+        <p class="text-warmgray leading-relaxed mb-10 max-w-3xl">Malerfirmaet Bach ApS stod for en komplet renovering af hotelværelser, gange og fællesarealer på Herlev Kro &amp; Hotel. Projektet blev gennemført uden for hotellets åbningstid for at minimere forstyrrelse af gæsterne.</p>
+
+        <!-- Before/After grid -->
+        <h3 class="font-serif text-xl font-medium mb-6">Før og efter</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_20.jpg" data-alt="Herlev Kro &amp; Hotel – hotelværelse, før">
+            <img src="images/img_20.jpg" alt="Herlev Kro &amp; Hotel – hotelværelse, før" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <div class="absolute inset-0 bg-chardark/30 flex items-end p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span class="bg-chardark/70 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Før</span>
+            </div>
+            <span class="absolute top-2 left-2 bg-chardark/70 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Før</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_28.jpg" data-alt="Herlev Kro &amp; Hotel – renoveret hotelværelse, efter">
+            <img src="images/img_28.jpg" alt="Herlev Kro &amp; Hotel – renoveret hotelværelse, efter" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <div class="absolute inset-0 bg-chardark/20 flex items-end p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span class="bg-brand/80 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+            </div>
+            <span class="absolute top-2 left-2 bg-brand/80 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_21.jpg" data-alt="Herlev Kro &amp; Hotel – hotelgang, før">
+            <img src="images/img_21.jpg" alt="Herlev Kro &amp; Hotel – hotelgang, før" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-chardark/70 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Før</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_29.jpg" data-alt="Herlev Kro &amp; Hotel – renoveret hotelgang, efter">
+            <img src="images/img_29.jpg" alt="Herlev Kro &amp; Hotel – renoveret hotelgang, efter" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-brand/80 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_23.jpg" data-alt="Herlev Kro &amp; Hotel – hotelværelse 2, før">
+            <img src="images/img_23.jpg" alt="Herlev Kro &amp; Hotel – hotelværelse 2, før" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-chardark/70 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Før</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_30.jpg" data-alt="Herlev Kro &amp; Hotel – renoveret hotelværelse 2, efter">
+            <img src="images/img_30.jpg" alt="Herlev Kro &amp; Hotel – renoveret hotelværelse 2, efter" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-brand/80 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_26.jpg" data-alt="Herlev Kro &amp; Hotel – hotelværelse 3, før">
+            <img src="images/img_26.jpg" alt="Herlev Kro &amp; Hotel – hotelværelse 3, før" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-chardark/70 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Før</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_34.jpg" data-alt="Herlev Kro &amp; Hotel – renoveret hotelværelse 3, efter">
+            <img src="images/img_34.jpg" alt="Herlev Kro &amp; Hotel – renoveret hotelværelse 3, efter" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-brand/80 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vibevænget detail -->
+    <div id="project-vibevænget-detail" class="hidden bg-white border-t border-gray-100 py-16 px-6 lg:px-12" aria-label="Projektdetaljer: Børnehaven Vibevænget">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-center justify-between mb-10">
+          <div>
+            <p class="text-xs font-medium tracking-widest uppercase text-brand mb-2">Institutioner · Maling og renovering</p>
+            <h2 class="font-serif text-3xl md:text-4xl font-medium">Børnehaven Vibevænget, Bagsværd</h2>
+          </div>
+          <button class="project-close-btn text-warmgray hover:text-charcoal transition-colors p-2" data-project="vibevænget" aria-label="Luk projektdetaljer">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 p-6 bg-offwhite border border-gray-100 rounded-xl">
+          <div>
+            <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-1">Kunde</p>
+            <p class="font-medium text-sm">Børnehaven Vibevænget</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-1">Kategori</p>
+            <p class="font-medium text-sm">Institutioner</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-1">Ydelse</p>
+            <p class="font-medium text-sm">Udvendig maling</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-1">Lokation</p>
+            <p class="font-medium text-sm">Bagsværd</p>
+          </div>
+        </div>
+
+        <p class="text-warmgray leading-relaxed mb-10 max-w-3xl">Maling og renovering af legehuse, udendørs træværk og legepladsinstallationer på Børnehaven Vibevænget i Bagsværd. Arbejdet blev udført i skolernes sommerferie for minimal forstyrrelse.</p>
+
+        <h3 class="font-serif text-xl font-medium mb-6">Før og efter</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_13.jpg" data-alt="Børnehaven Vibevænget – legehus, før">
+            <img src="images/img_13.jpg" alt="Børnehaven Vibevænget – legehus, før" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-chardark/70 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Før</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_14.jpg" data-alt="Børnehaven Vibevænget – malet legehus, efter">
+            <img src="images/img_14.jpg" alt="Børnehaven Vibevænget – malet legehus, efter" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-brand/80 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_15.jpg" data-alt="Børnehaven Vibevænget – detalje, efter">
+            <img src="images/img_15.jpg" alt="Børnehaven Vibevænget – detalje, efter" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-brand/80 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_16.jpg" data-alt="Børnehaven Vibevænget – bygning">
+            <img src="images/img_16.jpg" alt="Børnehaven Vibevænget – bygning" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-brand/80 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ved Fortet detail -->
+    <div id="project-vedfortet-detail" class="hidden bg-white border-t border-gray-100 py-16 px-6 lg:px-12" aria-label="Projektdetaljer: Børnehaven Ved Fortet">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-center justify-between mb-10">
+          <div>
+            <p class="text-xs font-medium tracking-widest uppercase text-brand mb-2">Institutioner · Totalrenovering</p>
+            <h2 class="font-serif text-3xl md:text-4xl font-medium">Børnehaven Ved Fortet</h2>
+          </div>
+          <button class="project-close-btn text-warmgray hover:text-charcoal transition-colors p-2" data-project="vedfortet" aria-label="Luk projektdetaljer">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 p-6 bg-offwhite border border-gray-100 rounded-xl">
+          <div>
+            <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-1">Kunde</p>
+            <p class="font-medium text-sm">Børnehaven Ved Fortet</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-1">Kategori</p>
+            <p class="font-medium text-sm">Institutioner</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-1">Ydelse</p>
+            <p class="font-medium text-sm">Totalrenovering</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-1">Lokation</p>
+            <p class="font-medium text-sm">København</p>
+          </div>
+        </div>
+
+        <p class="text-warmgray leading-relaxed mb-4 max-w-3xl">Totalrenovering af legeplads, legepladsehuse, facade og udendørs træstrukturer på Børnehaven Ved Fortet. Ingolf &amp; Ghufran udtaler: <em>"Adam var meget serviceminded og meget resultatorienteret. De leverede et fremragende stykke kvalitetshåndværk og overholdt den aftalte tid og pris. Efter totalrenovationen kom kommunen på besøg og godkendte alt det udførte arbejde. Vi kan meget varmt anbefale Malerfirmaet Bach ApS."</em></p>
+
+        <h3 class="font-serif text-xl font-medium mb-6">Før og efter</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_35.jpg" data-alt="Børnehaven Ved Fortet – facade, før">
+            <img src="images/img_35.jpg" alt="Børnehaven Ved Fortet – facade, før" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-chardark/70 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Før</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_36.jpg" data-alt="Børnehaven Ved Fortet – malet facade, efter">
+            <img src="images/img_36.jpg" alt="Børnehaven Ved Fortet – malet facade, efter" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-brand/80 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_41.jpg" data-alt="Børnehaven Ved Fortet – pavillon, før">
+            <img src="images/img_41.jpg" alt="Børnehaven Ved Fortet – pavillon, før" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-chardark/70 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Før</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_43.jpg" data-alt="Børnehaven Ved Fortet – malet pavillon, efter">
+            <img src="images/img_43.jpg" alt="Børnehaven Ved Fortet – malet pavillon, efter" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-brand/80 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_46.jpg" data-alt="Børnehaven Ved Fortet – legeplads, før">
+            <img src="images/img_46.jpg" alt="Børnehaven Ved Fortet – legeplads, før" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-chardark/70 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Før</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_48.jpg" data-alt="Børnehaven Ved Fortet – malede legepladsehuse, efter">
+            <img src="images/img_48.jpg" alt="Børnehaven Ved Fortet – malede legepladsehuse, efter" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-brand/80 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_49.jpg" data-alt="Børnehaven Ved Fortet – legepladsdetalje, efter">
+            <img src="images/img_49.jpg" alt="Børnehaven Ved Fortet – legepladsdetalje, efter" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-brand/80 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+          </div>
+          <div class="relative group overflow-hidden cursor-pointer lightbox-trigger rounded-lg" data-src="images/img_50.jpg" data-alt="Børnehaven Ved Fortet – legeplads, efter">
+            <img src="images/img_50.jpg" alt="Børnehaven Ved Fortet – legeplads, efter" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500 rounded-lg" loading="lazy" />
+            <span class="absolute top-2 left-2 bg-brand/80 text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CTA ===== -->
+    <section class="py-20 px-6 lg:px-12 bg-charcoal text-white" aria-label="Call to action">
+      <div class="max-w-3xl mx-auto text-center fade-in">
+        <p class="text-xs font-medium tracking-widest uppercase text-brand/80 mb-4">Næste projekt</p>
+        <h2 class="font-serif text-4xl md:text-5xl font-medium mb-5">Skal dit projekt være det næste?</h2>
+        <p class="text-white/60 mb-8 leading-relaxed">Kontakt os for et gratis og uforpligtende tilbud. Vi besigter opgaven og sender et skriftligt tilbud inden for 1–2 hverdage.</p>
+        <a href="index.html#kontakt" class="inline-flex items-center gap-2 bg-brand text-white font-medium px-8 py-4 hover:bg-branddk transition-colors">
+          Få uforpligtende tilbud
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== LIGHTBOX ===== -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Billedvisning" tabindex="-1">
+    <button id="lightbox-close" class="absolute top-4 right-4 text-white/70 hover:text-white p-2 z-10" aria-label="Luk billede">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <img id="lightbox-img" src="" alt="" class="rounded-2xl shadow-2xl" />
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-chardark text-white py-12 px-6 lg:px-12" role="contentinfo">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-start gap-8 mb-8">
+        <div>
+          <p class="font-serif text-lg font-medium mb-1">Malerfirmaet Bach ApS</p>
+          <p class="text-white/30 text-xs">CVR: 44 07 11 50 · Høje Gladsaxe 68, 2860 Søborg</p>
+        </div>
+        <div class="flex gap-8 text-sm text-white/50">
+          <a href="index.html" class="hover:text-white transition-colors">Forside</a>
+          <a href="privatlivspolitik.html" class="hover:text-white transition-colors">Privatlivspolitik</a>
+          <a href="cookiepolitik.html" class="hover:text-white transition-colors">Cookiepolitik</a>
+        </div>
+      </div>
+      <div class="border-t border-white/8 pt-6 text-white/20 text-xs">
+        © <span id="year"></span> Malerfirmaet Bach ApS. Alle rettigheder forbeholdes.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Nav scroll
+    window.addEventListener('scroll', () => {
+      document.getElementById('site-header').classList.toggle('nav-scrolled', window.scrollY > 10);
+    });
+
+    // Mobile menu
+    const mBtn = document.getElementById('mobile-menu-btn');
+    const mMenu = document.getElementById('mobile-menu');
+    mBtn.addEventListener('click', () => {
+      const isOpen = mMenu.classList.toggle('hidden');
+      mBtn.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    // Fade-in — use rootMargin to ensure elements already in viewport become visible immediately
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.01, rootMargin: '0px 0px -20px 0px' });
+    // Make elements already visible at load show immediately
+    document.querySelectorAll('.fade-in').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight) {
+        el.classList.add('visible');
+      } else {
+        observer.observe(el);
+      }
+    });
+
+    // ===== FILTER =====
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('#projects-grid .project-card');
+    const countNum = document.getElementById('count-num');
+    const noResults = document.getElementById('no-results');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+
+        // Update button states
+        filterBtns.forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+
+        // Filter cards
+        let visibleCount = 0;
+        projectCards.forEach(card => {
+          const match = filter === 'alle' || card.dataset.category === filter;
+          card.classList.toggle('hidden-card', !match);
+          if (match) visibleCount++;
+        });
+
+        countNum.textContent = visibleCount;
+        noResults.classList.toggle('hidden', visibleCount > 0);
+
+        // Close any open detail panels when filtering
+        document.querySelectorAll('[id$="-detail"]').forEach(panel => {
+          panel.classList.add('hidden');
+        });
+        document.querySelectorAll('.project-expand-btn').forEach(b => {
+          b.setAttribute('aria-expanded', 'false');
+          b.querySelector('span') && (b.querySelector('span').textContent = 'Se projekt');
+        });
+      });
+    });
+
+    // ===== PROJECT EXPAND/COLLAPSE (shared function) =====
+    function openProject(projectId) {
+      const detailPanel = document.getElementById('project-' + projectId + '-detail');
+      if (!detailPanel) return;
+      // Close all panels first
+      document.querySelectorAll('[id$="-detail"]').forEach(panel => panel.classList.add('hidden'));
+      document.querySelectorAll('.project-expand-btn').forEach(b => b.setAttribute('aria-expanded', 'false'));
+      // Open target
+      detailPanel.classList.remove('hidden');
+      const expandBtn = document.querySelector('.project-expand-btn[data-project="' + projectId + '"]');
+      if (expandBtn) expandBtn.setAttribute('aria-expanded', 'true');
+      setTimeout(() => { detailPanel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
+    }
+
+    // Make entire card clickable
+    document.querySelectorAll('.project-card').forEach(card => {
+      card.addEventListener('click', () => openProject(card.dataset.project));
+      card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProject(card.dataset.project); } });
+    });
+
+    document.querySelectorAll('.project-expand-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const projectId = btn.dataset.project;
+        const detailPanel = document.getElementById('project-' + projectId + '-detail');
+        const isOpen = !detailPanel.classList.contains('hidden');
+        if (isOpen) {
+          detailPanel.classList.add('hidden');
+          btn.setAttribute('aria-expanded', 'false');
+        } else {
+          openProject(projectId);
+        }
+      });
+    });
+
+    // ===== URL PARAMETER DEEP-LINK =====
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const projektParam = params.get('projekt');
+      if (projektParam) {
+        // Force all fade-in elements visible so panel renders correctly
+        document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+        setTimeout(() => openProject(projektParam), 400);
+      }
+    })();
+
+    document.querySelectorAll('.project-close-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const projectId = btn.dataset.project;
+        const detailPanel = document.getElementById('project-' + projectId + '-detail');
+        detailPanel.classList.add('hidden');
+        // Scroll back to the card
+        const card = document.querySelector('[data-project="' + projectId + '"]');
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+
+    // ===== LIGHTBOX =====
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+
+    document.querySelectorAll('.lightbox-trigger').forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        lightboxImg.src = trigger.dataset.src;
+        lightboxImg.alt = trigger.dataset.alt || '';
+        lightbox.classList.add('open');
+        lightbox.focus();
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // Cookie banner
+    function showCookieBanner() {
+      if (!localStorage.getItem('cookie-consent')) {
+        document.getElementById('cookie-banner').style.display = 'block';
+      }
+    }
+    function dismissCookie(type) {
+      localStorage.setItem('cookie-consent', type);
+      document.getElementById('cookie-banner').style.display = 'none';
+    }
+    document.getElementById('cookie-ok').addEventListener('click', () => dismissCookie('all'));
+    document.getElementById('cookie-necessary').addEventListener('click', () => dismissCookie('necessary'));
+    showCookieBanner();
+  </script>
+</body>
+</html>

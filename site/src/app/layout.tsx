@@ -1,0 +1,107 @@
+import type { Metadata, Viewport } from "next";
+import { Playfair_Display, Inter } from "next/font/google";
+import "./globals.css";
+import { CookieBanner } from "@/components/CookieBanner";
+import { company } from "@/content/site";
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(company.url),
+  title: {
+    default: `${company.name} — Malerfirma i København og på Sjælland`,
+    template: `%s · ${company.name}`,
+  },
+  description:
+    "Erhvervs- og privatmaling i København og på Sjælland. Aftalt pris, aftalt tid, kvalitetsgaranti. Malerfirmaet bag Radisson, Scandic og Carlsberg Byen.",
+  keywords: [
+    "malerfirma København",
+    "malerfirma Sjælland",
+    "erhvervsmaling",
+    "hotelrenovering",
+    "Bach maler",
+    "Malerfirmaet Bach",
+    "totalrenovering",
+  ],
+  authors: [{ name: company.name, url: company.url }],
+  creator: company.name,
+  publisher: company.name,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "da_DK",
+    url: company.url,
+    siteName: company.name,
+    title: `${company.name} — Malerfirma i København og på Sjælland`,
+    description:
+      "Malerfirmaet bag Radisson, Scandic og Carlsberg Byen. Aftalt pris, aftalt tid, kvalitetsgaranti.",
+    images: [{ url: "/images/shared/img_28.jpg", width: 1200, height: 630, alt: company.name }],
+  },
+  icons: {
+    icon: [{ url: "/favicon.png", type: "image/png" }],
+    apple: "/favicon.png",
+  },
+  robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#7a9e9a",
+  width: "device-width",
+  initialScale: 1,
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="da" className={`${playfair.variable} ${inter.variable}`}>
+      <body className="bg-cream-200 text-charcoal antialiased">
+        {children}
+        <CookieBanner />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              name: company.name,
+              identifier: company.cvr,
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: company.address.street,
+                postalCode: company.address.postal,
+                addressLocality: company.address.city,
+                addressCountry: "DK",
+              },
+              telephone: company.phoneE164,
+              email: company.email,
+              url: company.url,
+              sameAs: [company.social.facebook, company.social.instagram],
+              openingHoursSpecification: [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                  opens: "07:00",
+                  closes: "17:30",
+                },
+              ],
+              areaServed: company.areas,
+            }),
+          }}
+        />
+      </body>
+    </html>
+  );
+}

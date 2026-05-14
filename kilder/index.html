@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Malerfirma i København | Erhverv og Privat | Malerfirmaet Bach ApS</title>
+  <meta name="description" content="Malerfirmaet Bach ApS udfører maleropgaver i København og på Sjælland for både erhverv og privat. Aftalt pris, aftalt tid, kvalitetsgaranti. Ring 41 44 07 11." />
+  <meta property="og:title" content="Malerfirmaet Bach ApS – Erhvervs- og privatmaling i København" />
+  <meta property="og:description" content="Malerfirmaet bag Radisson, Scandic og Carlsberg Byen. Aftalt pris, aftalt tid, kvalitetsgaranti." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://malerfirmaetbach.dk" />
+  <meta property="og:image" content="https://malerfirmaetbach.dk/images/img_28.jpg" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%237a9e9a'/><text y='.85em' x='50%' text-anchor='middle' font-size='62'>🎨</text></svg>" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script defer data-domain="malerfirmaetbach.dk" src="https://plausible.io/js/script.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand:    '#7a9e9a',
+            branddk:  '#5a7e7a',
+            charcoal: '#2d3748',
+            chardark: '#1a202c',
+            offwhite: '#F7F6F2',
+            warmgray: '#718096',
+            lightgray:'#E2E8F0',
+          },
+          fontFamily: {
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            sans:  ['Inter', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background-color: #F7F6F2; color: #2d3748; }
+    h1, h2, h3, h4 { font-family: 'Playfair Display', Georgia, serif; }
+
+    /* Fade-in animations */
+    .fade-in { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* Scrolling ticker */
+    .ticker-track {
+      display: flex;
+      width: max-content;
+      animation: ticker-scroll 28s linear infinite;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-wrap {
+      overflow: hidden;
+      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+
+    /* Service cards */
+    .service-card { transition: transform 0.25s ease, box-shadow 0.25s ease; border-radius: 0.75rem; }
+    .service-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(45,55,72,0.10); }
+
+    /* FAQ */
+    .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .faq-content.open { max-height: 300px; }
+    .faq-icon { transition: transform 0.3s ease; }
+    .faq-icon.open { transform: rotate(45deg); }
+
+    /* Process step connector */
+    .step-connector::after {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: calc(50% + 28px);
+      width: calc(100% - 56px);
+      height: 1px;
+      background: linear-gradient(to right, #7a9e9a, #E2E8F0);
+    }
+    @media (max-width: 1023px) { .step-connector::after { display: none; } }
+
+    /* Before/after badge */
+    .badge-before { background: rgba(45,55,72,0.75); }
+    .badge-after  { background: rgba(122,158,154,0.90); }
+
+    /* Nav scroll effect */
+    .nav-hero { background: rgba(26,32,44,0.82) !important; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom-color: rgba(255,255,255,0.08) !important; }
+    .nav-hero .nav-link { color: rgba(255,255,255,0.80) !important; }
+    .nav-hero .nav-link:hover { color: #ffffff !important; }
+    .nav-hero .nav-cta { background: #7a9e9a !important; color: #ffffff !important; }
+    .nav-hero .nav-phone { color: #7a9e9a !important; }
+    .nav-hero #mobile-menu-btn { color: #ffffff !important; }
+    .nav-scrolled { box-shadow: 0 1px 20px rgba(45,55,72,0.08); }
+
+    /* Image hover zoom */
+    .img-zoom { overflow: hidden; border-radius: 0.5rem; }
+    .img-zoom img { transition: transform 0.55s ease; }
+    .img-zoom:hover img { transform: scale(1.06); }
+
+    /* Clickable project images */
+    .project-img-link { display: block; cursor: pointer; }
+    .project-img-link:hover .img-zoom img { transform: scale(1.06); }
+
+    /* Stats counter */
+    .stat-num { font-family: 'Playfair Display', serif; }
+
+    /* Focus styles */
+    :focus-visible { outline: 2px solid #7a9e9a; outline-offset: 3px; }
+  </style>
+</head>
+<body class="bg-offwhite text-charcoal">
+
+  <!-- ===== COOKIE BANNER ===== -->
+  <div id="cookie-banner" role="region" aria-label="Cookie-samtykke" aria-live="polite"
+       class="fixed bottom-0 left-0 right-0 z-50 bg-charcoal text-white px-6 py-5 shadow-2xl"
+       style="display:none">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="flex-1">
+        <p class="font-medium text-sm mb-1">Vi respekterer dit privatliv</p>
+        <p class="text-white/50 text-xs leading-relaxed">Vi bruger kun nødvendige cookies til at huske dine præferencer. <a href="cookiepolitik.html" class="underline hover:text-white transition-colors">Læs vores cookiepolitik.</a></p>
+      </div>
+      <div class="flex gap-3 shrink-0">
+        <button id="cookie-ok" class="bg-brand text-white text-sm font-medium px-6 py-2.5 rounded-md hover:bg-branddk transition-colors focus-visible:outline-white">
+          Accepter alle
+        </button>
+        <button id="cookie-necessary" class="border border-white/30 text-white/70 text-sm font-medium px-5 py-2.5 rounded-md hover:bg-white/10 transition-colors focus-visible:outline-white">
+          Kun nødvendige
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== NAVIGATION ===== -->
+  <header id="site-header" class="fixed top-0 left-0 right-0 z-40 bg-offwhite/96 backdrop-blur-sm border-b border-gray-200/50 transition-all duration-300">
+    <nav class="max-w-7xl mx-auto px-6 lg:px-12 h-16 flex items-center justify-between" aria-label="Primær navigation">
+      <a href="/" class="flex items-center group" aria-label="Malerfirmaet Bach ApS – forside">
+        <img src="images/logo.png" alt="Malerfirmaet Bach ApS" class="h-12 w-auto max-w-[220px]" />
+      </a>
+      <div class="hidden md:flex items-center gap-7 text-sm font-medium text-warmgray">
+        <a href="#services" class="nav-link hover:text-charcoal transition-colors">Ydelser</a>
+        <a href="#proces" class="nav-link hover:text-charcoal transition-colors">Proces</a>
+        <a href="#om-os" class="nav-link hover:text-charcoal transition-colors">Om os</a>
+        <a href="projekter.html" class="nav-link hover:text-charcoal transition-colors">Projekter</a>
+        <a href="tel:41440711" class="nav-phone text-brand font-semibold hover:text-branddk transition-colors flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          41 44 07 11
+        </a>
+        <a href="#kontakt" class="nav-cta ml-1 bg-charcoal text-white text-sm px-5 py-2.5 rounded-md hover:bg-chardark transition-colors">Få tilbud</a>
+      </div>
+      <button id="mobile-menu-btn" class="md:hidden p-2 text-charcoal" aria-label="Åbn menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg id="menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </nav>
+    <div id="mobile-menu" class="hidden md:hidden bg-offwhite border-t border-gray-200/50 px-6 py-4 space-y-1">
+      <a href="#services" class="block text-sm font-medium text-warmgray hover:text-charcoal py-2.5 border-b border-gray-100">Ydelser</a>
+      <a href="#proces" class="block text-sm font-medium text-warmgray hover:text-charcoal py-2.5 border-b border-gray-100">Proces</a>
+      <a href="#om-os" class="block text-sm font-medium text-warmgray hover:text-charcoal py-2.5 border-b border-gray-100">Om os</a>
+      <a href="projekter.html" class="block text-sm font-medium text-warmgray hover:text-charcoal py-2.5 border-b border-gray-100">Projekter</a>
+      <a href="tel:41440711" class="block text-sm font-semibold text-brand py-2.5 border-b border-gray-100">41 44 07 11</a>
+      <a href="#kontakt" class="block bg-charcoal text-white text-sm font-medium px-5 py-3 text-center mt-3 rounded-lg">Få tilbud</a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ===== HERO ===== -->
+    <section class="relative min-h-screen flex items-center pt-16" aria-label="Hero">
+      <div class="absolute inset-0">
+        <img src="images/img_28.jpg" alt="Renoveret hotelværelse – Herlev Kro &amp; Hotel" class="w-full h-full object-cover" loading="eager" fetchpriority="high" />
+        <div class="absolute inset-0 bg-gradient-to-r from-chardark/80 via-chardark/60 to-transparent"></div>
+      </div>
+      <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full py-24">
+        <div class="max-w-2xl">
+          <p class="text-xs font-medium tracking-widest uppercase text-white/50 mb-5 flex items-center gap-2">
+            <span class="w-6 h-px bg-brand inline-block"></span>
+            København &amp; Sjælland
+          </p>
+          <h1 class="font-serif text-5xl md:text-6xl lg:text-7xl font-medium text-white leading-[1.08] mb-6">
+            Malerfirmaet bag<br />
+            <em class="not-italic text-brand">Radisson, Scandic</em><br />
+            og Carlsberg Byen.
+          </h1>
+          <p class="text-white/70 text-lg leading-relaxed mb-10 max-w-xl">
+            Erhvervs- og privatmaling i København og på Sjælland. Vi holder aftalt tid og pris — og kvaliteten ses på håndværket.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="#kontakt" class="inline-flex items-center justify-center gap-2 bg-brand text-white font-medium px-8 py-4 rounded-lg hover:bg-branddk transition-colors">
+              Få uforpligtende tilbud
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>
+            <a href="projekter.html" class="inline-flex items-center justify-center border border-white/30 text-white font-medium px-8 py-4 rounded-lg hover:bg-white/10 transition-colors">
+              Se projekter
+            </a>
+          </div>
+          <!-- Stats -->
+          <div class="flex gap-10 mt-14 pt-10 border-t border-white/15">
+            <div>
+              <p class="stat-num text-3xl font-medium text-white">12<span class="text-brand">+</span></p>
+              <p class="text-white/40 text-xs uppercase tracking-wide mt-1">Hoteller renoveret</p>
+            </div>
+            <div>
+              <p class="stat-num text-3xl font-medium text-white">100<span class="text-brand">%</span></p>
+              <p class="text-white/40 text-xs uppercase tracking-wide mt-1">Aftalt pris holdt</p>
+            </div>
+            <div>
+              <p class="stat-num text-3xl font-medium text-white">KBH</p>
+              <p class="text-white/40 text-xs uppercase tracking-wide mt-1">&amp; Sjælland</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Scroll cue -->
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/25" aria-hidden="true">
+        <span class="text-[10px] tracking-widest uppercase">Scroll</span>
+        <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </section>
+
+    <!-- ===== CLIENT TICKER ===== -->
+    <section class="bg-white border-y border-gray-100 py-10" aria-label="Udvalgte kunder">
+      <p class="text-center text-[10px] font-medium tracking-widest uppercase text-warmgray/50 mb-7">Udvalgte kunder</p>
+      <div class="ticker-wrap">
+        <div class="ticker-track" role="list" aria-label="Klientliste">
+          <!-- First set -->
+          <div class="flex items-center gap-14 px-7" role="presentation">
+            <span role="listitem" class="text-warmgray/50 font-medium text-sm whitespace-nowrap hover:text-charcoal transition-colors cursor-default">Radisson Blu Scandinavia</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0" aria-hidden="true"></span>
+            <span role="listitem" class="text-warmgray/50 font-medium text-sm whitespace-nowrap hover:text-charcoal transition-colors cursor-default">Scandic Hvidovre</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0" aria-hidden="true"></span>
+            <span role="listitem" class="text-warmgray/50 font-medium text-sm whitespace-nowrap hover:text-charcoal transition-colors cursor-default">Hotel Sanders</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0" aria-hidden="true"></span>
+            <span role="listitem" class="text-warmgray/50 font-medium text-sm whitespace-nowrap hover:text-charcoal transition-colors cursor-default">Hotel Nora</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0" aria-hidden="true"></span>
+            <span role="listitem" class="text-warmgray/50 font-medium text-sm whitespace-nowrap hover:text-charcoal transition-colors cursor-default">Urban House Copenhagen</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0" aria-hidden="true"></span>
+            <span role="listitem" class="text-warmgray/50 font-medium text-sm whitespace-nowrap hover:text-charcoal transition-colors cursor-default">Herlev Kro &amp; Hotel</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0" aria-hidden="true"></span>
+            <span role="listitem" class="text-warmgray/50 font-medium text-sm whitespace-nowrap hover:text-charcoal transition-colors cursor-default">Carlsberg Byen</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0" aria-hidden="true"></span>
+            <span role="listitem" class="text-warmgray/50 font-medium text-sm whitespace-nowrap hover:text-charcoal transition-colors cursor-default">Mjølnerparken</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0" aria-hidden="true"></span>
+            <span role="listitem" class="text-warmgray/50 font-medium text-sm whitespace-nowrap hover:text-charcoal transition-colors cursor-default">Fiomagården</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0" aria-hidden="true"></span>
+            <span role="listitem" class="text-warmgray/50 font-medium text-sm whitespace-nowrap hover:text-charcoal transition-colors cursor-default">3Byggetilbud</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0" aria-hidden="true"></span>
+            <span role="listitem" class="text-warmgray/50 font-medium text-sm whitespace-nowrap hover:text-charcoal transition-colors cursor-default">Børnehaven Vibevænget</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0" aria-hidden="true"></span>
+            <span role="listitem" class="text-warmgray/50 font-medium text-sm whitespace-nowrap hover:text-charcoal transition-colors cursor-default">Børnehaven Ved Fortet</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0" aria-hidden="true"></span>
+          </div>
+          <!-- Duplicate for seamless loop -->
+          <div class="flex items-center gap-14 px-7" aria-hidden="true">
+            <span class="text-warmgray/50 font-medium text-sm whitespace-nowrap">Radisson Blu Scandinavia</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0"></span>
+            <span class="text-warmgray/50 font-medium text-sm whitespace-nowrap">Scandic Hvidovre</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0"></span>
+            <span class="text-warmgray/50 font-medium text-sm whitespace-nowrap">Hotel Sanders</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0"></span>
+            <span class="text-warmgray/50 font-medium text-sm whitespace-nowrap">Hotel Nora</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0"></span>
+            <span class="text-warmgray/50 font-medium text-sm whitespace-nowrap">Urban House Copenhagen</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0"></span>
+            <span class="text-warmgray/50 font-medium text-sm whitespace-nowrap">Herlev Kro &amp; Hotel</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0"></span>
+            <span class="text-warmgray/50 font-medium text-sm whitespace-nowrap">Carlsberg Byen</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0"></span>
+            <span class="text-warmgray/50 font-medium text-sm whitespace-nowrap">Mjølnerparken</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0"></span>
+            <span class="text-warmgray/50 font-medium text-sm whitespace-nowrap">Fiomagården</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0"></span>
+            <span class="text-warmgray/50 font-medium text-sm whitespace-nowrap">3Byggetilbud</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0"></span>
+            <span class="text-warmgray/50 font-medium text-sm whitespace-nowrap">Børnehaven Vibevænget</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0"></span>
+            <span class="text-warmgray/50 font-medium text-sm whitespace-nowrap">Børnehaven Ved Fortet</span>
+            <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SERVICES ===== -->
+    <section id="services" class="py-24 px-6 lg:px-12 bg-offwhite" aria-labelledby="services-heading">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16">
+          <div class="lg:col-span-5 fade-in">
+            <p class="text-xs font-medium tracking-widest uppercase text-brand mb-4">Ydelser</p>
+            <h2 id="services-heading" class="font-serif text-4xl md:text-5xl font-medium leading-tight">Hvad vi laver</h2>
+          </div>
+          <div class="lg:col-span-7 lg:pt-14 fade-in">
+            <p class="text-warmgray leading-relaxed text-lg">Fra enkle malerarbejder til totalrenoveringer af hoteller og institutioner — vi løser alle typer opgaver med samme omhu og ordholdenhed.</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <article class="service-card bg-white p-8 border border-gray-100 fade-in rounded-xl">
+            <div class="w-11 h-11 bg-brand/10 flex items-center justify-center mb-5 rounded-sm">
+              <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            </div>
+            <h3 class="font-serif text-xl font-medium mb-3">Indvendig maling</h3>
+            <p class="text-warmgray text-sm leading-relaxed">Vægge, lofter og træværk i boliger og erhverv. Grundig forberedelse og rene kanter.</p>
+          </article>
+          <article class="service-card bg-white p-8 border border-gray-100 fade-in rounded-xl">
+            <div class="w-11 h-11 bg-brand/10 flex items-center justify-center mb-5 rounded-sm">
+              <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            </div>
+            <h3 class="font-serif text-xl font-medium mb-3">Udvendig maling</h3>
+            <p class="text-warmgray text-sm leading-relaxed">Facader, vinduer, døre og træværk. Vejrbestandige materialer og professionel afdækning.</p>
+          </article>
+          <article class="service-card bg-white p-8 border border-gray-100 fade-in rounded-xl">
+            <div class="w-11 h-11 bg-brand/10 flex items-center justify-center mb-5 rounded-sm">
+              <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            </div>
+            <h3 class="font-serif text-xl font-medium mb-3">Erhverv og institutioner</h3>
+            <p class="text-warmgray text-sm leading-relaxed">Hoteller, børnehaver, kontorer og større byggeprojekter. Vi arbejder i weekender og uden for åbningstid.</p>
+          </article>
+          <article class="service-card bg-white p-8 border border-gray-100 fade-in rounded-xl">
+            <div class="w-11 h-11 bg-brand/10 flex items-center justify-center mb-5 rounded-sm">
+              <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            </div>
+            <h3 class="font-serif text-xl font-medium mb-3">Totalrenovering</h3>
+            <p class="text-warmgray text-sm leading-relaxed">Vi koordinerer maler-, tømrer- og gartnerarbejde, så du kun har én kontaktperson.</p>
+          </article>
+          <article class="service-card bg-white p-8 border border-gray-100 fade-in rounded-xl">
+            <div class="w-11 h-11 bg-brand/10 flex items-center justify-center mb-5 rounded-sm">
+              <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+            </div>
+            <h3 class="font-serif text-xl font-medium mb-3">Sprøjtemaling</h3>
+            <p class="text-warmgray text-sm leading-relaxed">Ensartet finish på store flader. Ideel til nybyg og større erhvervsopgaver.</p>
+          </article>
+          <article class="service-card bg-white p-8 border border-gray-100 fade-in rounded-xl">
+            <div class="w-11 h-11 bg-brand/10 flex items-center justify-center mb-5 rounded-sm">
+              <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            </div>
+            <h3 class="font-serif text-xl font-medium mb-3">Farvekonsultation</h3>
+            <p class="text-warmgray text-sm leading-relaxed">Rådgivning om farvevalg og materialer, så resultatet holder i længden.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURED PROJECTS (preview) ===== -->
+    <section class="py-24 px-6 lg:px-12 bg-charcoal text-white" aria-labelledby="projekter-preview-heading">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14 fade-in">
+          <div>
+            <p class="text-xs font-medium tracking-widest uppercase text-brand/80 mb-3">Vores arbejde</p>
+            <h2 id="projekter-preview-heading" class="font-serif text-4xl md:text-5xl font-medium">Resultater der taler<br class="hidden md:block" /> for sig selv</h2>
+          </div>
+            <a href="projekter.html" class="inline-flex items-center gap-2 border border-white/20 text-white/70 text-sm font-medium px-6 py-3 rounded-lg hover:bg-white/10 hover:text-white transition-colors shrink-0">
+            Se alle projekter
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <!-- Featured 3-column grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <!-- Large feature: Hotel -->
+          <a href="projekter.html?projekt=hotel" class="md:col-span-2 img-zoom relative group fade-in block" aria-label="Se projekt: Herlev Kro &amp; Hotel">
+            <img src="images/img_28.jpg" alt="Herlev Kro &amp; Hotel – renoveret hotelværelse, efter" class="w-full h-80 md:h-96 object-cover rounded-xl" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-t from-chardark/70 via-transparent to-transparent flex flex-col justify-end p-6">
+              <span class="badge-after text-white text-[10px] font-semibold uppercase tracking-widest px-2.5 py-1 self-start mb-2 rounded">Efter</span>
+              <p class="font-serif text-xl font-medium text-white">Herlev Kro &amp; Hotel</p>
+              <p class="text-white/50 text-sm mt-0.5">Totalrenovering · Erhverv</p>
+            </div>
+          </a>
+          <!-- Right column: 2 stacked -->
+          <div class="flex flex-col gap-4">
+            <a href="projekter.html?projekt=vedfortet" class="img-zoom relative group fade-in block" aria-label="Se projekt: Børnehaven Ved Fortet">
+              <img src="images/img_48.jpg" alt="Børnehaven Ved Fortet – malede legepladsehuse, efter" class="w-full h-44 object-cover rounded-xl" loading="lazy" />
+              <div class="absolute inset-0 bg-gradient-to-t from-chardark/70 via-transparent to-transparent flex flex-col justify-end p-4">
+                <span class="badge-after text-white text-[10px] font-semibold uppercase tracking-widest px-2.5 py-1 self-start mb-1.5 rounded">Efter</span>
+                <p class="font-serif text-base font-medium text-white">Børnehaven Ved Fortet</p>
+              </div>
+            </a>
+            <a href="projekter.html?projekt=vibevænget" class="img-zoom relative group fade-in block" aria-label="Se projekt: Børnehaven Vibevænget">
+              <img src="images/img_14.jpg" alt="Børnehaven Vibevænget – malet legehus, efter" class="w-full h-44 object-cover rounded-xl" loading="lazy" />
+              <div class="absolute inset-0 bg-gradient-to-t from-chardark/70 via-transparent to-transparent flex flex-col justify-end p-4">
+                <span class="badge-after text-white text-[10px] font-semibold uppercase tracking-widest px-2.5 py-1 self-start mb-1.5 rounded">Efter</span>
+                <p class="font-serif text-base font-medium text-white">Børnehaven Vibevænget</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Before/after comparison row -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 fade-in">
+          <div class="img-zoom relative group">
+            <img src="images/img_20.jpg" alt="Herlev Kro &amp; Hotel – hotelværelse, før" class="w-full h-40 object-cover rounded-xl" loading="lazy" />
+            <div class="absolute inset-0 bg-chardark/30 flex items-end p-3">
+              <span class="badge-before text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Før</span>
+            </div>
+          </div>
+          <div class="img-zoom relative group">
+            <img src="images/img_30.jpg" alt="Herlev Kro &amp; Hotel – renoveret hotelværelse, efter" class="w-full h-40 object-cover rounded-xl" loading="lazy" />
+            <div class="absolute inset-0 bg-chardark/20 flex items-end p-3">
+              <span class="badge-after text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+            </div>
+          </div>
+          <div class="img-zoom relative group">
+            <img src="images/img_46.jpg" alt="Børnehaven Ved Fortet – legeplads, før" class="w-full h-40 object-cover rounded-xl" loading="lazy" />
+            <div class="absolute inset-0 bg-chardark/30 flex items-end p-3">
+              <span class="badge-before text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Før</span>
+            </div>
+          </div>
+          <div class="img-zoom relative group">
+            <img src="images/img_36.jpg" alt="Børnehaven Ved Fortet – malet facade, efter" class="w-full h-40 object-cover rounded-xl" loading="lazy" />
+            <div class="absolute inset-0 bg-chardark/20 flex items-end p-3">
+              <span class="badge-after text-white text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5">Efter</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROCESS ===== -->
+    <section id="proces" class="py-24 px-6 lg:px-12 bg-offwhite" aria-labelledby="proces-heading">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16 fade-in">
+          <p class="text-xs font-medium tracking-widest uppercase text-brand mb-4">Vores tilgang</p>
+          <h2 id="proces-heading" class="font-serif text-4xl md:text-5xl font-medium">Fra første opkald til færdigt arbejde</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div class="relative step-connector text-center fade-in">
+            <div class="w-14 h-14 border-2 border-brand bg-white flex items-center justify-center mx-auto mb-5 rounded-full">
+              <span class="font-serif text-xl font-medium text-brand">1</span>
+            </div>
+            <h3 class="font-serif text-lg font-medium mb-3">Dialog og besigtigelse</h3>
+            <p class="text-warmgray text-sm leading-relaxed">Vi møder op på adressen, lytter og forstår opgaven fuldt ud.</p>
+          </div>
+          <div class="relative step-connector text-center fade-in">
+            <div class="w-14 h-14 border-2 border-brand bg-white flex items-center justify-center mx-auto mb-5 rounded-full">
+              <span class="font-serif text-xl font-medium text-brand">2</span>
+            </div>
+            <h3 class="font-serif text-lg font-medium mb-3">Klar aftale</h3>
+            <p class="text-warmgray text-sm leading-relaxed">Skriftligt tilbud med aftalt tid, pris og kvalitet. Ingen skjulte tillæg.</p>
+          </div>
+          <div class="relative step-connector text-center fade-in">
+            <div class="w-14 h-14 border-2 border-brand bg-white flex items-center justify-center mx-auto mb-5 rounded-full">
+              <span class="font-serif text-xl font-medium text-brand">3</span>
+            </div>
+            <h3 class="font-serif text-lg font-medium mb-3">Udførelse med kvalitetskontrol</h3>
+            <p class="text-warmgray text-sm leading-relaxed">Vi bruger anerkendte materialer og tjekker undervejs.</p>
+          </div>
+          <div class="text-center fade-in">
+            <div class="w-14 h-14 bg-brand border-2 border-brand flex items-center justify-center mx-auto mb-5 rounded-full">
+              <span class="font-serif text-xl font-medium text-white">4</span>
+            </div>
+            <h3 class="font-serif text-lg font-medium mb-3">Aflevering og efterservice</h3>
+            <p class="text-warmgray text-sm leading-relaxed">Vi afleverer først, når du er tilfreds. Ingen kompromiser.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== WHY BACH ===== -->
+    <section id="om-os" class="py-24 px-6 lg:px-12 bg-white" aria-labelledby="om-os-heading">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 xl:gap-24 items-center">
+          <div class="fade-in">
+            <p class="text-xs font-medium tracking-widest uppercase text-brand mb-4">Hvad du kan forvente</p>
+            <h2 id="om-os-heading" class="font-serif text-4xl md:text-5xl font-medium leading-tight mb-6">
+              Ordholdenhed er ikke et løfte.<br class="hidden md:block" /> Det er vores arbejdsmetode.
+            </h2>
+            <p class="text-warmgray leading-relaxed mb-8">Vi er et malerfirma, der tager aftaler alvorligt. Uanset om det er et hotelværelse eller en børnehave, leverer vi det vi lover — til aftalt tid og pris.</p>
+            <div class="space-y-5">
+              <div class="flex items-start gap-4">
+                <div class="w-5 h-5 bg-brand flex items-center justify-center shrink-0 mt-0.5 rounded-full">
+                  <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-sm text-charcoal">Ordholdenhed</p>
+                  <p class="text-warmgray text-sm mt-0.5 leading-relaxed">Vi overholder aftalt tid og pris. Ingen skjulte tillæg.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="w-5 h-5 bg-brand flex items-center justify-center shrink-0 mt-0.5 rounded-full">
+                  <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-sm text-charcoal">Kvalitetsgaranti</p>
+                  <p class="text-warmgray text-sm mt-0.5 leading-relaxed">Intern kvalitetskontrol gennem hele projektet.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="w-5 h-5 bg-brand flex items-center justify-center shrink-0 mt-0.5 rounded-full">
+                  <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-sm text-charcoal">Anerkendte materialer</p>
+                  <p class="text-warmgray text-sm mt-0.5 leading-relaxed">Vi bruger de bedste produkter fra vores faste leverandører.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="w-5 h-5 bg-brand flex items-center justify-center shrink-0 mt-0.5 rounded-full">
+                  <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-sm text-charcoal">Klar dialog</p>
+                  <p class="text-warmgray text-sm mt-0.5 leading-relaxed">Én kontaktperson, ingen forvirring, hurtige svar.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="fade-in grid grid-cols-2 gap-3">
+            <img src="images/img_28.jpg" alt="Renoveret hotelværelse – Herlev Kro &amp; Hotel" class="w-full h-52 object-cover rounded-sm" loading="lazy" />
+            <img src="images/img_48.jpg" alt="Malede legepladsehuse – Børnehaven Ved Fortet" class="w-full h-52 object-cover rounded-sm mt-6" loading="lazy" />
+            <img src="images/img_14.jpg" alt="Malet legehus – Børnehaven Vibevænget" class="w-full h-52 object-cover rounded-sm -mt-6" loading="lazy" />
+            <img src="images/img_34.jpg" alt="Renoveret hotelgang – Herlev Kro &amp; Hotel" class="w-full h-52 object-cover rounded-sm" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TESTIMONIAL ===== -->
+    <section class="py-20 px-6 lg:px-12 bg-brand/8" aria-label="Kundeanmeldelse">
+      <div class="max-w-4xl mx-auto text-center fade-in">
+        <svg class="w-10 h-10 text-brand/30 mx-auto mb-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+        <blockquote class="font-serif text-2xl md:text-3xl font-medium leading-relaxed text-charcoal mb-8">
+          Adam var meget serviceminded og meget resultatorienteret. De leverede et fremragende stykke kvalitetshåndværk og overholdt den aftalte tid og pris. Efter totalrenovationen kom kommunen på besøg og godkendte alt det udførte arbejde.
+        </blockquote>
+        <footer>
+          <div class="w-10 h-10 bg-brand text-white font-serif text-lg font-medium flex items-center justify-center mx-auto mb-3 rounded-full">IG</div>
+          <p class="font-semibold text-sm text-charcoal">Ingolf &amp; Ghufran</p>
+          <p class="text-warmgray text-sm mt-0.5">Børnehaveprojekt · Totalrenovering</p>
+        </footer>
+      </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <section class="py-24 px-6 lg:px-12 bg-white" aria-labelledby="faq-heading">
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-16 fade-in">
+          <p class="text-xs font-medium tracking-widest uppercase text-brand mb-4">Spørgsmål og svar</p>
+          <h2 id="faq-heading" class="font-serif text-4xl md:text-5xl font-medium">Ofte stillede spørgsmål</h2>
+        </div>
+        <div class="divide-y divide-gray-100">
+          <div class="faq-item py-5 fade-in">
+            <button class="faq-btn w-full flex items-center justify-between text-left gap-4" aria-expanded="false">
+              <span class="font-medium text-charcoal">Hvad koster et tilbud?</span>
+              <svg class="faq-icon w-5 h-5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
+            </button>
+            <div class="faq-content">
+              <p class="text-warmgray text-sm leading-relaxed pt-3 pb-2">Et tilbud er altid gratis og uforpligtende. Vi besigter opgaven og sender et skriftligt tilbud inden for 1–2 hverdage.</p>
+            </div>
+          </div>
+          <div class="faq-item py-5 fade-in">
+            <button class="faq-btn w-full flex items-center justify-between text-left gap-4" aria-expanded="false">
+              <span class="font-medium text-charcoal">Arbejder I i weekender?</span>
+              <svg class="faq-icon w-5 h-5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
+            </button>
+            <div class="faq-content">
+              <p class="text-warmgray text-sm leading-relaxed pt-3 pb-2">Ja. For erhvervskunder kan vi tilrettelægge arbejdet, så det forstyrrer driften mindst muligt — herunder weekender og aftener.</p>
+            </div>
+          </div>
+          <div class="faq-item py-5 fade-in">
+            <button class="faq-btn w-full flex items-center justify-between text-left gap-4" aria-expanded="false">
+              <span class="font-medium text-charcoal">Dækker I hele Danmark?</span>
+              <svg class="faq-icon w-5 h-5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
+            </button>
+            <div class="faq-content">
+              <p class="text-warmgray text-sm leading-relaxed pt-3 pb-2">Vi arbejder primært i København og på Sjælland. Kontakt os, og vi vurderer om vi kan hjælpe med din opgave.</p>
+            </div>
+          </div>
+          <div class="faq-item py-5 fade-in">
+            <button class="faq-btn w-full flex items-center justify-between text-left gap-4" aria-expanded="false">
+              <span class="font-medium text-charcoal">Hvad er jeres garanti?</span>
+              <svg class="faq-icon w-5 h-5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
+            </button>
+            <div class="faq-content">
+              <p class="text-warmgray text-sm leading-relaxed pt-3 pb-2">Vi afleverer ikke arbejdet, før du er tilfreds. Vi bruger anerkendte materialer og følger branchens standarder for kvalitet og reklamationsret.</p>
+            </div>
+          </div>
+          <div class="faq-item py-5 fade-in">
+            <button class="faq-btn w-full flex items-center justify-between text-left gap-4" aria-expanded="false">
+              <span class="font-medium text-charcoal">Kan I stå for hele renoveringen?</span>
+              <svg class="faq-icon w-5 h-5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
+            </button>
+            <div class="faq-content">
+              <p class="text-warmgray text-sm leading-relaxed pt-3 pb-2">Ja. Vi koordinerer maler-, tømrer- og gartnerarbejde og er din ene kontaktperson gennem hele projektet.</p>
+            </div>
+          </div>
+          <div class="faq-item py-5 fade-in">
+            <button class="faq-btn w-full flex items-center justify-between text-left gap-4" aria-expanded="false">
+              <span class="font-medium text-charcoal">Hvornår kan I starte?</span>
+              <svg class="faq-icon w-5 h-5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
+            </button>
+            <div class="faq-content">
+              <p class="text-warmgray text-sm leading-relaxed pt-3 pb-2">Det afhænger af opgavens størrelse og vores aktuelle kapacitet. Kontakt os, og vi finder en startdato der passer jer.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section id="kontakt" class="py-24 px-6 lg:px-12 bg-offwhite" aria-labelledby="kontakt-heading">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16 fade-in">
+          <p class="text-xs font-medium tracking-widest uppercase text-brand mb-4">Kontakt os</p>
+          <h2 id="kontakt-heading" class="font-serif text-4xl md:text-5xl font-medium">Få et uforpligtende tilbud</h2>
+          <p class="text-warmgray mt-4 max-w-xl mx-auto">Udfyld formularen, så vender vi tilbage hurtigst muligt — typisk inden for 24 timer på hverdage.</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 max-w-6xl mx-auto">
+          <!-- Contact info -->
+          <div class="lg:col-span-2 fade-in space-y-4">
+            <div class="bg-white border border-gray-100 p-5 flex items-center gap-4 rounded-xl">
+              <div class="w-10 h-10 bg-brand/10 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+              </div>
+              <div>
+                <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-0.5">Telefon</p>
+                <a href="tel:41440711" class="font-semibold text-charcoal hover:text-brand transition-colors">41 44 07 11</a>
+              </div>
+            </div>
+            <div class="bg-white border border-gray-100 p-5 flex items-center gap-4 rounded-xl">
+              <div class="w-10 h-10 bg-brand/10 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              </div>
+              <div>
+                <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-0.5">E-mail</p>
+                <a href="mailto:info@malerfirmaetbach.dk" class="font-semibold text-charcoal hover:text-brand transition-colors text-sm">info@malerfirmaetbach.dk</a>
+              </div>
+            </div>
+            <div class="bg-white border border-gray-100 p-5 flex items-center gap-4 rounded-xl">
+              <div class="w-10 h-10 bg-brand/10 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              </div>
+              <div>
+                <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-0.5">Adresse</p>
+                <p class="font-semibold text-charcoal text-sm">Høje Gladsaxe 68, 2860 Søborg</p>
+              </div>
+            </div>
+            <div class="bg-white border border-gray-100 p-5 flex items-center gap-4 rounded-xl">
+              <div class="w-10 h-10 bg-brand/10 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <div>
+                <p class="text-[10px] text-warmgray uppercase tracking-widest font-medium mb-0.5">Åbningstider</p>
+                <p class="font-semibold text-charcoal text-sm">Man–fre 07.00–17.30</p>
+                <p class="text-warmgray text-xs mt-0.5">Weekend efter aftale</p>
+              </div>
+            </div>
+          </div>
+          <!-- Form -->
+          <div class="lg:col-span-3 fade-in">
+            <form name="kontakt" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="tak.html" class="bg-white p-8 border border-gray-100 space-y-5 rounded-2xl" novalidate>
+              <input type="hidden" name="form-name" value="kontakt" />
+              <p class="hidden" aria-hidden="true"><label>Skal ikke udfyldes: <input name="bot-field" tabindex="-1" /></label></p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label for="navn" class="block text-[10px] font-semibold uppercase tracking-widest text-warmgray mb-2">Navn <span class="text-brand">*</span></label>
+                  <input type="text" id="navn" name="navn" required autocomplete="name" class="w-full border border-gray-200 bg-offwhite px-4 py-3 text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors rounded-lg" placeholder="Dit fulde navn" />
+                </div>
+                <div>
+                  <label for="telefon" class="block text-[10px] font-semibold uppercase tracking-widest text-warmgray mb-2">Telefon <span class="text-brand">*</span></label>
+                  <input type="tel" id="telefon" name="telefon" required autocomplete="tel" class="w-full border border-gray-200 bg-offwhite px-4 py-3 text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors rounded-lg" placeholder="Dit telefonnummer" />
+                </div>
+              </div>
+              <div>
+                <label for="email" class="block text-[10px] font-semibold uppercase tracking-widest text-warmgray mb-2">E-mail <span class="text-brand">*</span></label>
+                <input type="email" id="email" name="email" required autocomplete="email" class="w-full border border-gray-200 bg-offwhite px-4 py-3 text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors rounded-lg" placeholder="din@email.dk" />
+              </div>
+              <div>
+                <label for="adresse" class="block text-[10px] font-semibold uppercase tracking-widest text-warmgray mb-2">Adresse for opgaven</label>
+                <input type="text" id="adresse" name="adresse" autocomplete="street-address" class="w-full border border-gray-200 bg-offwhite px-4 py-3 text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors rounded-lg" placeholder="Valgfri" />
+              </div>
+              <div>
+                <label for="opgavetype" class="block text-[10px] font-semibold uppercase tracking-widest text-warmgray mb-2">Type af opgave</label>
+                <select id="opgavetype" name="opgavetype" class="w-full border border-gray-200 bg-offwhite px-4 py-3 text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors appearance-none cursor-pointer rounded-lg">
+                  <option value="">Vælg type</option>
+                  <option value="indvendig">Indvendig maling</option>
+                  <option value="udvendig">Udvendig maling</option>
+                  <option value="erhverv">Erhverv</option>
+                  <option value="totalrenovering">Totalrenovering</option>
+                  <option value="andet">Andet</option>
+                </select>
+              </div>
+              <div>
+                <label for="besked" class="block text-[10px] font-semibold uppercase tracking-widest text-warmgray mb-2">Beskriv opgaven <span class="text-brand">*</span></label>
+                <textarea id="besked" name="besked" required rows="4" class="w-full border border-gray-200 bg-offwhite px-4 py-3 text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors resize-none rounded-lg" placeholder="Fortæl os om opgaven — størrelse, tidspunkt, særlige ønsker..."></textarea>
+              </div>
+              <div class="flex items-start gap-3">
+                <input type="checkbox" id="samtykke" name="samtykke" required class="mt-1 w-4 h-4 border-gray-300 text-brand focus:ring-brand cursor-pointer rounded" />
+                <label for="samtykke" class="text-sm text-warmgray cursor-pointer">Jeg accepterer <a href="privatlivspolitik.html" class="underline hover:text-brand transition-colors">privatlivspolitikken</a> <span class="text-brand">*</span></label>
+              </div>
+              <button type="submit" class="w-full bg-charcoal text-white font-medium py-4 hover:bg-chardark transition-colors text-sm tracking-wide rounded-lg">
+                Send forespørgsel
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-chardark text-white py-16 px-6 lg:px-12" role="contentinfo">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+        <div class="md:col-span-2">
+          <div class="mb-4">
+            <img src="images/logo.png" alt="Malerfirmaet Bach ApS" class="h-12 w-auto max-w-[200px] brightness-0 invert opacity-80" />
+          </div>
+          <p class="text-white/40 text-sm leading-relaxed mb-4">Professionel maling til erhverv og privat i København og på Sjælland.</p>
+          <p class="text-white/25 text-xs">CVR: 44 07 11 50 · Høje Gladsaxe 68, 2860 Søborg</p>
+          <div class="flex gap-4 mt-5">
+            <a href="https://www.facebook.com/profile.php?id=61554423687843" target="_blank" rel="noopener noreferrer" class="text-white/30 hover:text-brand transition-colors" aria-label="Facebook">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/malerfirmaetbachaps/" target="_blank" rel="noopener noreferrer" class="text-white/30 hover:text-brand transition-colors" aria-label="Instagram">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div>
+          <p class="text-[10px] font-semibold tracking-widest uppercase text-white/25 mb-4">Kontakt</p>
+          <div class="space-y-2 text-sm text-white/50">
+            <p><a href="tel:41440711" class="hover:text-white transition-colors">41 44 07 11</a></p>
+            <p><a href="mailto:info@malerfirmaetbach.dk" class="hover:text-white transition-colors">info@malerfirmaetbach.dk</a></p>
+            <p>Man–fre 07.00–17.30</p>
+          </div>
+        </div>
+        <div>
+          <p class="text-[10px] font-semibold tracking-widest uppercase text-white/25 mb-4">Links</p>
+          <div class="space-y-2 text-sm text-white/50">
+            <p><a href="projekter.html" class="hover:text-white transition-colors">Projekter</a></p>
+            <p><a href="privatlivspolitik.html" class="hover:text-white transition-colors">Privatlivspolitik</a></p>
+            <p><a href="cookiepolitik.html" class="hover:text-white transition-colors">Cookiepolitik</a></p>
+            <p><a href="#" id="cookie-settings-link" class="hover:text-white transition-colors">Cookie-indstillinger</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-white/8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-3 text-white/20 text-xs">
+        <p>© <span id="year"></span> Malerfirmaet Bach ApS. Alle rettigheder forbeholdes.</p>
+        <p>Høje Gladsaxe 68 · 2860 Søborg · CVR 44 07 11 50</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"LocalBusiness","name":"Malerfirmaet Bach ApS","identifier":"44071150","address":{"@type":"PostalAddress","streetAddress":"Høje Gladsaxe 68","postalCode":"2860","addressLocality":"Søborg","addressCountry":"DK"},"telephone":"+4541440711","email":"info@malerfirmaetbach.dk","url":"https://malerfirmaetbach.dk","sameAs":["https://www.facebook.com/profile.php?id=61554423687843","https://www.instagram.com/malerfirmaetbachaps/"],"geo":{"@type":"GeoCoordinates","latitude":55.7358,"longitude":12.4882},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"07:00","closes":"17:30"}],"areaServed":["København","Sjælland"]}
+  </script>
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Nav scroll: dark on hero, light after scroll
+    const siteHeader = document.getElementById('site-header');
+    const heroHeight = document.querySelector('section[aria-label="Hero"]')?.offsetHeight || 600;
+    function updateNav() {
+      const pastHero = window.scrollY > heroHeight - 80;
+      siteHeader.classList.toggle('nav-hero', !pastHero);
+      siteHeader.classList.toggle('nav-scrolled', pastHero && window.scrollY > 10);
+    }
+    window.addEventListener('scroll', updateNav, { passive: true });
+    updateNav();
+
+    // Mobile menu
+    const mBtn = document.getElementById('mobile-menu-btn');
+    const mMenu = document.getElementById('mobile-menu');
+    const mIconOpen = document.getElementById('menu-icon-open');
+    const mIconClose = document.getElementById('menu-icon-close');
+    mBtn.addEventListener('click', () => {
+      const isOpen = mMenu.classList.toggle('hidden');
+      mBtn.setAttribute('aria-expanded', String(!isOpen));
+      mIconOpen.classList.toggle('hidden', !isOpen);
+      mIconClose.classList.toggle('hidden', isOpen);
+    });
+    mMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      mMenu.classList.add('hidden');
+      mBtn.setAttribute('aria-expanded', 'false');
+      mIconOpen.classList.remove('hidden');
+      mIconClose.classList.add('hidden');
+    }));
+
+    // Fade-in on scroll
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const content = item.querySelector('.faq-content');
+        const icon = btn.querySelector('.faq-icon');
+        const isOpen = content.classList.contains('open');
+        document.querySelectorAll('.faq-content.open').forEach(c => {
+          c.classList.remove('open');
+          c.closest('.faq-item').querySelector('.faq-icon').classList.remove('open');
+          c.closest('.faq-item').querySelector('.faq-btn').setAttribute('aria-expanded', 'false');
+        });
+        if (!isOpen) { content.classList.add('open'); icon.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+      });
+    });
+
+    // Cookie banner
+    function showCookieBanner() {
+      if (!localStorage.getItem('cookie-consent')) {
+        const banner = document.getElementById('cookie-banner');
+        banner.style.display = 'block';
+      }
+    }
+    function dismissCookie(type) {
+      localStorage.setItem('cookie-consent', type);
+      document.getElementById('cookie-banner').style.display = 'none';
+    }
+    document.getElementById('cookie-ok').addEventListener('click', () => dismissCookie('all'));
+    document.getElementById('cookie-necessary').addEventListener('click', () => dismissCookie('necessary'));
+    const csl = document.getElementById('cookie-settings-link');
+    if (csl) csl.addEventListener('click', e => { e.preventDefault(); localStorage.removeItem('cookie-consent'); showCookieBanner(); });
+    showCookieBanner();
+  </script>
+</body>
+</html>
