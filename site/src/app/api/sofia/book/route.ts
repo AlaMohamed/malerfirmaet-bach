@@ -111,6 +111,37 @@ export async function POST(request: Request) {
   let body: unknown;
   try { body = await request.json(); } catch { body = {}; }
   body = stripNulls(body);
+
+  // Defense in depth: catch unresolved Retell dynamic-variable placeholders
+  // BEFORE zod runs. Without this, "{{customer_email}}" trips zod's email()
+  // validator with the generic "Invalid input" message — Sofia then has no
+  // idea which field is the actual problem. Web-call tests from the Retell
+  // dashboard frequently surface this (variables are never populated), so
+  // we return a specific error that tells Sofia exactly which field to
+  // collect from the customer.
+  if (body && typeof body === "object") {
+    const fields = ["name", "phone", "email", "address", "project_description"] as const;
+    const placeholderFields: string[] = [];
+    for (const f of fields) {
+      const v = (body as Record<string, unknown>)[f];
+      if (typeof v === "string" && /\{\{[^}]+\}\}/.test(v)) {
+        placeholderFields.push(f);
+      }
+    }
+    if (placeholderFields.length > 0) {
+      console.error("[sofia/book] ❌ UNRESOLVED PLACEHOLDERS", { placeholderFields });
+      return NextResponse.json(
+        {
+          error: "unresolved-placeholders",
+          fields: placeholderFields,
+          sofiaMessage:
+            `Felterne [${placeholderFields.join(", ")}] indeholder placeholder-strenge der ikke er udfyldt. Spørg kunden direkte om disse værdier i samtalen — kald ALDRIG book_appointment med "{{...}}"-strenge.`,
+        },
+        { status: 400 },
+      );
+    }
+  }
+
   const parsed = Schema.safeParse(body);
   if (!parsed.success) {
     // Detailed log for debugging — shows exactly which field Sofia sent wrong.
