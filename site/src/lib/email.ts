@@ -184,22 +184,11 @@ function emailShell(opts: ShellOpts): string {
           <!-- Contact card -->
           <tr>
             <td style="padding:28px 36px 36px">
-              <table cellpadding="0" cellspacing="0" border="0" width="100%" role="presentation">
-                <tr>
-                  <td>
-                    <p style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;color:#718096;line-height:1.7;margin:0">
-                      <strong style="color:#1a202c;font-size:14px;letter-spacing:0.01em">${escapeHtml(company.name)}</strong><br>
-                      <a href="tel:${company.phoneE164}" style="color:#7a9e9a;text-decoration:none">${escapeHtml(company.phone)}</a> · <a href="mailto:${company.email}" style="color:#7a9e9a;text-decoration:none">${escapeHtml(company.email)}</a><br>
-                      ${escapeHtml(company.address.street)}, ${escapeHtml(company.address.postal)} ${escapeHtml(company.address.city)}
-                    </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding-top:20px">
-                    <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;color:#7a9e9a;font-size:16px;margin:0">"${escapeHtml(company.tagline)}"</p>
-                  </td>
-                </tr>
-              </table>
+              <p style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;color:#718096;line-height:1.7;margin:0">
+                <strong style="color:#1a202c;font-size:14px;letter-spacing:0.01em">${escapeHtml(company.name)}</strong><br>
+                <a href="tel:${company.phoneE164}" style="color:#7a9e9a;text-decoration:none">${escapeHtml(company.phone)}</a> · <a href="mailto:${company.email}" style="color:#7a9e9a;text-decoration:none">${escapeHtml(company.email)}</a><br>
+                ${escapeHtml(company.address.street)}, ${escapeHtml(company.address.postal)} ${escapeHtml(company.address.city)}
+              </p>
             </td>
           </tr>
 
@@ -304,7 +293,6 @@ function bookingText(opts: BookingEmail): string {
     ``,
     `Venlige hilsner`,
     company.name,
-    company.tagline,
   ].join("\n");
 }
 
@@ -408,7 +396,6 @@ export async function sendContactConfirmation(opts: ContactConfirmation): Promis
     ``,
     `Venlige hilsner`,
     company.name,
-    company.tagline,
   ].filter(Boolean).join("\n");
 
   const r = await client.emails.send({
