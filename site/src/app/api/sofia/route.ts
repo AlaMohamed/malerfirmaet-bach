@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyTurnstile } from "@/lib/turnstile";
-import { createOutboundCall, isRetellConfigured } from "@/lib/retell";
+import { createOutboundCall, findCallsForPhone, isRetellConfigured } from "@/lib/retell";
 import { sendAdminLeadNotification } from "@/lib/email";
 
 /**
@@ -119,12 +119,23 @@ export async function POST(request: Request) {
       ? `Henvendelse uden for åbningstid. Sofia ringer næste hverdag morgen. Du kan også ringe manuelt.`
       : `Sofia er endnu ikke aktiveret (manglende RETELL_FROM_NUMBER). Ring kunden op manuelt.`;
 
+    // Only look up call history when Sofia ISN'T calling right now. If she
+    // is calling now (callTriggered=true), the "Sofia ringer kunden op NU"
+    // note already explains the state — we don't want a red "har IKKE talt
+    // med kunden" banner appearing for a call literally in progress.
+    // For deferred calls (out-of-hours / not-configured), surfacing prior
+    // contact history helps Adam know whether this is a returning lead.
+    const sofiaHistory = callTriggered
+      ? undefined
+      : await findCallsForPhone(phoneE164).catch(() => []);
+
     await sendAdminLeadNotification({
       customerName: parsed.data.navn,
       customerPhone: phoneE164,
       customerEmail: parsed.data.email,
       source: "sofia-callback",
       context: note,
+      sofiaHistory,
     });
 
     return NextResponse.json({

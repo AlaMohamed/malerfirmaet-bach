@@ -3,6 +3,7 @@ import { z } from "zod";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { uploadLead } from "@/lib/drive";
 import { sendAdminLeadNotification, sendContactConfirmation } from "@/lib/email";
+import { findCallsForPhone } from "@/lib/retell";
 
 /**
  * Contact form endpoint (multipart).
@@ -132,6 +133,14 @@ export async function POST(request: Request) {
       .filter(Boolean)
       .join("\n");
 
+    // Look up prior Sofia calls for this phone number so the admin email
+    // can clearly say "Sofia has / has not talked to this customer". The
+    // helper has its own 4s timeout + try/catch — it never throws. Worst
+    // case it returns an empty array, which the admin template treats as
+    // "no prior contact" (showing the red banner). Run this BEFORE
+    // sendAdminLeadNotification so we can pass the result in.
+    const sofiaHistory = await findCallsForPhone(parsed.data.telefon).catch(() => []);
+
     // Fire both emails in parallel so a slow Resend response doesn't double
     // the form's perceived latency. Either failing only logs — the form
     // submission itself still succeeds (we've already stored the lead).
@@ -142,6 +151,7 @@ export async function POST(request: Request) {
         customerEmail: parsed.data.email,
         source: "kontakt",
         context: adminContext,
+        sofiaHistory,
       }),
       sendContactConfirmation({
         to: parsed.data.email,

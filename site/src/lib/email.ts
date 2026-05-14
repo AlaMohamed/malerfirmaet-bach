@@ -438,6 +438,70 @@ interface AdminLeadEmail {
   source: "sofia-callback" | "kontakt";
   /** Freeform note — Sofia's call summary, contact-form details, etc. */
   context?: string;
+  /**
+   * Prior Retell calls matching this customer's phone, fetched by the
+   * caller (e.g. /api/contact) before sending the email. Used to render
+   * the "Sofia har / har ikke talt med kunden" banner. Pass an empty
+   * array to explicitly state "no prior contact". Pass undefined to
+   * suppress the banner entirely (legacy callers that don't pre-fetch).
+   */
+  sofiaHistory?: Array<{
+    callId: string;
+    status: string;
+    startedAtIso: string;
+    durationMs: number | null;
+  }>;
+}
+
+/**
+ * Format a Sofia-history banner that goes at the top of the admin email.
+ * Three states:
+ *   - undefined          → no banner (caller didn't pre-fetch history)
+ *   - empty array        → red banner "Sofia har IKKE talt med kunden"
+ *   - 1+ entries         → green banner with call count + latest date
+ */
+function sofiaStatusBanner(
+  history: AdminLeadEmail["sofiaHistory"],
+  source: AdminLeadEmail["source"],
+): string {
+  if (history === undefined) return "";
+
+  const successfulCalls = history.filter(
+    (c) => (c.durationMs ?? 0) > 5_000 && c.status === "ended",
+  );
+
+  if (history.length === 0 || successfulCalls.length === 0) {
+    const heading = source === "kontakt" ? "Sofia har IKKE talt med kunden" : "Sofia kom ikke igennem";
+    const detail =
+      source === "kontakt"
+        ? "Henvendelsen kom via kontaktformularen — Sofia har ikke ringet kunden op. Du skal selv tage kontakt for at følge op."
+        : "Sofia kunne ikke gennemføre opkaldet (intet svar, optaget, eller teknisk fejl). Manuel opfølgning kræves.";
+    return `<table cellpadding="0" cellspacing="0" border="0" width="100%" role="presentation" style="background:#FEF3F2;border:1px solid #FCA5A5;border-left:4px solid #DC2626;border-radius:8px;margin:0 0 24px">
+      <tr><td style="padding:16px 18px">
+        <p style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;font-weight:600;color:#991B1B;margin:0 0 4px;letter-spacing:0.01em">⚠ ${escapeHtml(heading)}</p>
+        <p style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;color:#7F1D1D;line-height:1.55;margin:0">${escapeHtml(detail)}</p>
+      </td></tr>
+    </table>`;
+  }
+
+  // Successful calls exist — show a positive banner
+  const latest = successfulCalls[0]!; // already sorted descending by Retell
+  const latestDate = new Date(latest.startedAtIso);
+  const dateStr = latestDate.toLocaleString("da-DK", {
+    timeZone: "Europe/Copenhagen",
+    day: "numeric",
+    month: "long",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const count = successfulCalls.length;
+  const countLabel = count === 1 ? "1 tidligere opkald" : `${count} tidligere opkald`;
+  return `<table cellpadding="0" cellspacing="0" border="0" width="100%" role="presentation" style="background:#F0FDF4;border:1px solid #86EFAC;border-left:4px solid #16A34A;border-radius:8px;margin:0 0 24px">
+    <tr><td style="padding:16px 18px">
+      <p style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;font-weight:600;color:#14532D;margin:0 0 4px;letter-spacing:0.01em">✓ Sofia har talt med denne kunde</p>
+      <p style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;color:#166534;line-height:1.55;margin:0">${escapeHtml(countLabel)} på dette nummer. Seneste samtale: ${escapeHtml(dateStr)}.</p>
+    </td></tr>
+  </table>`;
 }
 
 /**
@@ -460,7 +524,15 @@ export async function sendAdminLeadNotification(opts: AdminLeadEmail): Promise<{
   }
 
   const sourceLabel = opts.source === "sofia-callback" ? "Ring mig op-formular" : "Kontaktformular";
-  const subject = `Nyt lead: ${opts.customerName} (${sourceLabel})`;
+  // Subject prefix makes it scannable in the inbox: KONTAKT vs RING MIG OP,
+  // plus a tag when Sofia hasn't touched this lead yet.
+  const sourceTag = opts.source === "sofia-callback" ? "RING MIG OP" : "KONTAKT";
+  const successfulPriorCalls =
+    opts.sofiaHistory?.filter((c) => (c.durationMs ?? 0) > 5_000 && c.status === "ended") ?? [];
+  const needsManualFollowup =
+    opts.sofiaHistory !== undefined && successfulPriorCalls.length === 0;
+  const subjectTag = needsManualFollowup ? "🔴 RING SELV" : "🟢";
+  const subject = `[${sourceTag}] ${subjectTag} ${opts.customerName}`;
 
   const rows = [
     detailRow("Kilde", escapeHtml(sourceLabel)),
@@ -486,30 +558,45 @@ export async function sendAdminLeadNotification(opts: AdminLeadEmail): Promise<{
   }
 
   const body =
+    sofiaStatusBanner(opts.sofiaHistory, opts.source) +
     detailCard(rows) +
     `<p style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;color:#718096;line-height:1.7;margin:0">
-      Hvis Sofia ikke nåede at booke en tid, så ring kunden manuelt op snarest muligt.
+      ${
+        needsManualFollowup
+          ? "Sofia har <strong>ikke</strong> talt med denne kunde. Ring manuelt op snarest muligt — eller send en mail."
+          : opts.sofiaHistory && opts.sofiaHistory.length > 0
+            ? "Sofia har tidligere talt med kunden — tjek transcripts i Retell-dashboardet for kontekst."
+            : "Hvis Sofia ikke nåede at booke en tid, så ring kunden manuelt op snarest muligt."
+      }
     </p>`;
 
   const html = emailShell({
-    preheader: `${opts.customerName} — ${sourceLabel}`,
-    eyebrow: "Nyt lead modtaget",
-    title: `${opts.customerName}`,
-    introHtml: `En ny henvendelse er kommet ind via <strong>${escapeHtml(sourceLabel.toLowerCase())}</strong>. Detaljer nedenfor.`,
+    preheader: needsManualFollowup
+      ? `Sofia har IKKE ringet — ${opts.customerName} (${sourceLabel})`
+      : `${opts.customerName} — ${sourceLabel}`,
+    eyebrow: needsManualFollowup ? "Manuel opfølgning kræves" : "Nyt lead modtaget",
+    title: opts.customerName,
+    introHtml: `En ny henvendelse er kommet ind via <strong>${escapeHtml(sourceLabel.toLowerCase())}</strong>.`,
     bodyHtml: body,
     cta: { url: `tel:${opts.customerPhone}`, label: "Ring til kunden" },
     footerNote: `Automatisk notifikation fra ${escapeHtml(company.name)}`,
   });
 
+  const sofiaTextLine = needsManualFollowup
+    ? `⚠ SOFIA HAR IKKE TALT MED KUNDEN — ring manuelt op.`
+    : opts.sofiaHistory && opts.sofiaHistory.length > 0
+      ? `✓ Sofia har tidligere talt med kunden (${successfulPriorCalls.length} opkald).`
+      : `Hvis Sofia ikke nåede at booke en tid: ring kunden manuelt op.`;
+
   const text = [
     `Nyt lead — ${sourceLabel}`,
+    ``,
+    sofiaTextLine,
     ``,
     `Navn:    ${opts.customerName}`,
     `Telefon: ${opts.customerPhone}`,
     `E-mail:  ${opts.customerEmail}`,
     opts.context ? `\nDetaljer:\n${opts.context}` : "",
-    ``,
-    `Hvis Sofia ikke nåede at booke en tid: ring kunden manuelt op.`,
   ].filter(Boolean).join("\n");
 
   const r = await client.emails.send({
