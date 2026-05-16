@@ -68,12 +68,21 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           </Container>
         </section>
 
-        {/* Project metadata bar */}
+        {/* Project metadata bar.
+            Five fact strips (Bygherre, Kategori, Ydelse, Lokation, Periode).
+            Periode is conditional on the project having a `period` field
+            — older entries without one will collapse the column away. We
+            switch to a 5-column grid only at md+ so mobile gets a clean
+            2-up stack. */}
         <section className="bg-cream-50 border-b border-warm-light/60">
           <Container className="py-8">
-            <dl className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <dl
+              className={`grid grid-cols-2 gap-6 ${
+                project.period ? "md:grid-cols-5" : "md:grid-cols-4"
+              }`}
+            >
               <div>
-                <dt className="text-[10px] uppercase tracking-widest text-warm-gray font-semibold mb-1.5">Kunde</dt>
+                <dt className="text-[10px] uppercase tracking-widest text-warm-gray font-semibold mb-1.5">Bygherre</dt>
                 <dd className="font-medium text-charcoal">{project.client}</dd>
               </div>
               <div>
@@ -85,21 +94,42 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                 <dd className="font-medium text-charcoal">{project.service}</dd>
               </div>
               <div>
-                <dt className="text-[10px] uppercase tracking-widest text-warm-gray font-semibold mb-1.5">Lokation</dt>
+                <dt className="text-[10px] uppercase tracking-widest text-warm-gray font-semibold mb-1.5">Beliggenhed</dt>
                 <dd className="font-medium text-charcoal">{project.location}</dd>
               </div>
+              {project.period && (
+                <div>
+                  <dt className="text-[10px] uppercase tracking-widest text-warm-gray font-semibold mb-1.5">Periode</dt>
+                  <dd className="font-medium text-charcoal">{project.period}</dd>
+                </div>
+              )}
             </dl>
           </Container>
         </section>
 
-        {/* Story */}
+        {/* Story.
+            First paragraph rendered as a slightly larger lead so the
+            opening sentence has visual weight — a common print-design
+            move that makes long-form copy more inviting. Subsequent
+            paragraphs use the standard body size. */}
         <section className="py-24 bg-cream-200">
           <Container className="max-w-3xl">
             <Eyebrow>Om projektet</Eyebrow>
-            <h2 className="font-serif text-display-md mt-4 mb-8 text-balance">Vores tilgang</h2>
-            <div className="space-y-5 text-charcoal/75 leading-relaxed text-pretty">
+            <h2 className="font-serif text-display-md mt-4 mb-8 text-balance">
+              Projektbeskrivelse
+            </h2>
+            <div className="text-charcoal/80 text-pretty">
               {project.description.map((p, i) => (
-                <p key={i}>{p}</p>
+                <p
+                  key={i}
+                  className={
+                    i === 0
+                      ? "text-lg leading-relaxed mb-6 text-charcoal-dark"
+                      : "leading-relaxed mb-5 last:mb-0"
+                  }
+                >
+                  {p}
+                </p>
               ))}
             </div>
 
