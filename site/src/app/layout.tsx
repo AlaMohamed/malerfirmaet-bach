@@ -57,6 +57,13 @@ export const metadata: Metadata = {
     apple: "/favicon.png",
   },
   robots: { index: true, follow: true },
+  // Google Search Console domain verification. The env var holds just the
+  // content attribute value (the long token); Next.js renders the full
+  // <meta name="google-site-verification"> tag automatically. When the var
+  // is unset (preview/local builds) the tag is simply omitted.
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+  },
 };
 
 export const viewport: Viewport = {
