@@ -4,7 +4,9 @@ import { useId, useRef, useState } from "react";
 import { Upload, X, FileImage, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/cn";
 
-const MAX_FILES = 5;
+// Must match MAX_FILES in /api/contact/route.ts — backend enforces the
+// same cap server-side. If you change one, change the other.
+const MAX_FILES = 10;
 const MAX_TOTAL_BYTES = 20 * 1024 * 1024; // 20 MB total
 const ACCEPTED = [".jpg", ".jpeg", ".png", ".heic", ".heif"];
 const ACCEPTED_MIME = ["image/jpeg", "image/png", "image/heic", "image/heif"];
