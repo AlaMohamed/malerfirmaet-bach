@@ -17,8 +17,8 @@ export function Hero() {
       <div className="absolute inset-0">
         <div className="absolute inset-0 animate-kenburns">
           <Image
-            src="/images/shared/img_28.jpg"
-            alt="Renoveret hotelværelse – udført af Malerfirmaet Bach"
+            src="/images/shared/hero-novo-kalundborg.jpg"
+            alt="Novo Nordisk Purification Plant 5 i Kalundborg – malerentreprise udført af Malerfirmaet Bach"
             fill
             priority
             quality={88}

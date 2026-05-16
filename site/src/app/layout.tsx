@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     title: `${company.name} — Malerfirma i København og på Sjælland`,
     description:
       "Malerfirmaet bag Radisson, Scandic og Carlsberg Byen. Aftalt pris, aftalt tid, kvalitetsgaranti.",
-    images: [{ url: "/images/shared/img_28.jpg", width: 1200, height: 630, alt: company.name }],
+    images: [{ url: "/images/shared/hero-novo-kalundborg.jpg", width: 1080, height: 608, alt: company.name }],
   },
   icons: {
     icon: [{ url: "/favicon.png", type: "image/png" }],
