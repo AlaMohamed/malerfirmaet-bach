@@ -63,13 +63,33 @@ function getDriveClient() {
 }
 
 function safeName(s: string) {
-  return s.replace(/[<>:"/\\|?*\x00-\x1f]/g, "").trim().slice(0, 120);
+  // Strip characters Drive (or downstream tools) struggle with, collapse
+  // whitespace, then cap length. Commas are preserved because they're
+  // part of the folder-naming convention ([DATO] - [NAVN], [ADRESSE]).
+  return s
+    .replace(/[<>:"/\\|?*\x00-\x1f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 120);
 }
 
-function timestampSlug() {
+function dateSlug() {
+  // Locale-stable YYYY-MM-DD using local server time. Drive itself shows
+  // the folder's createdTime so we don't need to encode time here —
+  // keeping the folder name human-readable was the user's explicit ask.
   const d = new Date();
   const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}.${pad(d.getMinutes())}`;
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+/** Build the per-lead folder name following the convention
+ *  "[DATO] - [NAVN], [ADRESSE]". When no address is provided (Sofia
+ *  callback form, or contact form with an empty adresse field) we drop
+ *  the comma + address part rather than emitting a dangling separator. */
+function buildFolderName(customer: string, address?: string): string {
+  const base = `${dateSlug()} - ${safeName(customer)}`;
+  if (!address || !address.trim()) return base;
+  return `${base}, ${safeName(address)}`;
 }
 
 function describeError(err: unknown): string {
@@ -97,7 +117,11 @@ function describeError(err: unknown): string {
 
 export async function uploadLead(opts: {
   customer: string;
+  /** Used in logs only — folder name no longer includes the source tag. */
   source: string; // "kontakt" | "sofia-callback"
+  /** Optional. Included in the folder name as `[DATO] - [NAVN], [ADRESSE]`
+   *  when present. Omitted from the name (no trailing comma) when empty. */
+  address?: string;
   files: { name: string; type: string; bytes: Buffer }[];
 }): Promise<UploadedLead> {
   const attempted = opts.files.length;
@@ -159,7 +183,7 @@ export async function uploadLead(opts: {
   // default. We always set the flag (it's a no-op for personal-Drive
   // folders) so both shared-drive and personal-drive setups work.
   const parent = process.env.GOOGLE_DRIVE_FOLDER_ID!;
-  const folderName = `${timestampSlug()} — ${safeName(opts.customer)} (${opts.source})`;
+  const folderName = buildFolderName(opts.customer, opts.address);
 
   let folderId: string | null = null;
   let folderUrl: string | null = null;

@@ -160,6 +160,7 @@ export async function POST(request: Request) {
     const drive = await uploadLead({
       customer: parsed.data.navn,
       source: "kontakt",
+      address: parsed.data.adresse || undefined,
       files,
     });
     if (drive.error) {
