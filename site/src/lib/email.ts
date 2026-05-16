@@ -791,3 +791,134 @@ export async function sendCancellationConfirmation(opts: CancelledEmail): Promis
   }
   return { ok: true, id: r.data?.id };
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Admin cancellation notification — sent to Adam when a customer self-cancels
+// ─────────────────────────────────────────────────────────────────────────────
+
+interface CancelledAdminEmail {
+  customerName: string;
+  customerPhone?: string;
+  customerEmail?: string;
+  /** ISO timestamp of the original booking that got cancelled. */
+  startISO: string;
+  /** Optional free-form reason the customer typed on /aflys. */
+  reason?: string;
+  /** Google Calendar event id, included in admin email for support context. */
+  eventId?: string;
+}
+
+/**
+ * Notify Adam (LEAD_NOTIFY_EMAIL, default info@malerfirmaetbach.dk) when a
+ * customer self-cancels their booking via /aflys. Renders an orange-banner
+ * card distinct from the green "new lead" / red "no contact yet" banners
+ * so Adam can scan the inbox and immediately spot cancellations.
+ *
+ * If the customer left a "hvorfor"-reason on the cancel page, it appears
+ * verbatim under a "Kundens årsag" row. When empty we skip the row entirely
+ * rather than rendering "—" so the email reads cleanly either way.
+ */
+export async function sendCancellationAdminNotification(
+  opts: CancelledAdminEmail,
+): Promise<{ ok: boolean; stub?: boolean; id?: string }> {
+  const client = getClient();
+  const from = process.env.RESEND_FROM_EMAIL ?? "noreply@malerfirmaetbach.dk";
+  const to = process.env.LEAD_NOTIFY_EMAIL ?? company.email;
+
+  if (!client) {
+    console.log("[email] Resend not configured — would notify Adam of cancellation:", opts.customerName);
+    return { ok: true, stub: true };
+  }
+
+  const when = formatHumanDateTime(opts.startISO);
+  const subject = `[AFLYST] 🟠 ${opts.customerName}`;
+
+  const reasonRow = opts.reason && opts.reason.trim().length > 0
+    ? detailRow(
+        "Kundens årsag",
+        `<span style="white-space:pre-wrap">${escapeHtml(opts.reason.trim())}</span>`,
+      )
+    : null;
+
+  const rows = [
+    detailRow("Kundenavn", escapeHtml(opts.customerName)),
+    opts.customerPhone
+      ? detailRow(
+          "Telefon",
+          `<a href="tel:${escapeHtml(opts.customerPhone)}" style="color:#7a9e9a;text-decoration:none;font-weight:500">${escapeHtml(opts.customerPhone)}</a>`,
+        )
+      : null,
+    opts.customerEmail
+      ? detailRow(
+          "E-mail",
+          `<a href="mailto:${escapeHtml(opts.customerEmail)}" style="color:#7a9e9a;text-decoration:none;font-weight:500">${escapeHtml(opts.customerEmail)}</a>`,
+        )
+      : null,
+    detailRow(
+      "Oprindelig tid",
+      `<span style="font-family:'Playfair Display',Georgia,serif;font-size:18px;line-height:1.3">${escapeHtml(when)}</span>`,
+    ),
+    reasonRow,
+    opts.eventId
+      ? detailRow(
+          "Event ID",
+          `<span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#9ca3af">${escapeHtml(opts.eventId)}</span>`,
+          { last: true },
+        )
+      : null,
+  ].filter((r): r is string => r !== null);
+
+  // Mark the actually-last row as terminal (no bottom border) when the
+  // event-id row was skipped — keeps the divider hygiene consistent.
+  if (!opts.eventId && rows.length > 0) {
+    rows[rows.length - 1] = rows[rows.length - 1]!.replace(/;border-bottom:1px solid #ECEAE3/, "");
+  }
+
+  // Orange banner — visually distinct from green ("new lead success")
+  // and red ("Sofia couldn't reach customer") so a cancellation can be
+  // spotted at a glance.
+  const banner = `<table cellpadding="0" cellspacing="0" border="0" width="100%" role="presentation" style="background:#FFFBEB;border:1px solid #FCD34D;border-left:4px solid #F59E0B;border-radius:8px;margin:0 0 24px">
+    <tr><td style="padding:16px 18px">
+      <p style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;font-weight:600;color:#78350F;margin:0 0 4px;letter-spacing:0.01em">🟠 Kunden har aflyst</p>
+      <p style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;color:#92400E;line-height:1.55;margin:0">Tidsslot er nu frigivet i kalenderen. Overvej at følge op for en ny tid hvis kunden var positiv om opgaven.</p>
+    </td></tr>
+  </table>`;
+
+  const html = emailShell({
+    preheader: `Aflysning: ${opts.customerName} — ${when}`,
+    eyebrow: "Aflysning",
+    title: opts.customerName,
+    introHtml: `Besigtigelsen <strong>${escapeHtml(when)}</strong> er netop blevet aflyst af kunden via aflysnings-linket i bekræftelses-mailen.`,
+    bodyHtml: banner + detailCard(rows),
+    cta: opts.customerPhone ? { url: `tel:${opts.customerPhone}`, label: "Ring til kunden" } : undefined,
+    footerNote: `Automatisk notifikation fra ${escapeHtml(company.name)}`,
+  });
+
+  const text = [
+    `🟠 AFLYSNING — ${opts.customerName}`,
+    ``,
+    `Oprindelig tid: ${when}`,
+    opts.customerPhone ? `Telefon:        ${opts.customerPhone}` : "",
+    opts.customerEmail ? `E-mail:         ${opts.customerEmail}` : "",
+    opts.reason && opts.reason.trim()
+      ? `\nKundens årsag:\n${opts.reason.trim()}`
+      : "",
+    ``,
+    `Tidsslot er nu frigivet. Overvej manuel opfølgning hvis kunden var positiv om opgaven.`,
+  ].filter(Boolean).join("\n");
+
+  const r = await client.emails.send({
+    from: `${company.name} <${from}>`,
+    to,
+    replyTo: opts.customerEmail || company.email,
+    subject,
+    html,
+    text,
+  });
+
+  if (r.error) {
+    console.error("[email] cancellation admin notification send error", r.error);
+    return { ok: false };
+  }
+  return { ok: true, id: r.data?.id };
+}
