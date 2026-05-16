@@ -45,6 +45,11 @@ interface CreateCallOpts {
   toNumber: string;
   customerName: string;
   customerEmail: string;
+  /** Optional address from the contact form. When populated, Sofia
+   *  confirms the address rather than asking — see Sofia v2 TRIN 3. */
+  customerAddress?: string;
+  customerPostal?: string;
+  customerCity?: string;
   metadata?: Record<string, string>;
 }
 
@@ -84,6 +89,13 @@ export async function createOutboundCall(opts: CreateCallOpts): Promise<CreateCa
           customer_name: opts.customerName,
           customer_email: opts.customerEmail,
           customer_phone: opts.toNumber,
+          // Empty strings (rather than undefined) so Sofia's prompt
+          // can pattern-match "{{customer_address}}" literal vs real
+          // value — same convention as the other variables. Sofia's
+          // TRIN 3 logic decides whether to confirm or ask.
+          customer_address: opts.customerAddress ?? "",
+          customer_postal: opts.customerPostal ?? "",
+          customer_city: opts.customerCity ?? "",
         },
         metadata: opts.metadata ?? {},
       }),

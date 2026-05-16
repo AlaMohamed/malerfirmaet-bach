@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { PageHeader } from "@/components/PageHeader";
 import { SofiaCallback } from "@/components/forms/SofiaCallback";
 import { CalendlyEmbed } from "@/components/forms/CalendlyEmbed";
+import { TitleMark } from "@/components/ui/TitleMark";
 import { company } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -21,7 +22,7 @@ export default function BookPage() {
       <main>
         <PageHeader
           eyebrow="Booking"
-          title="Book uforpligtende besigtigelse"
+          title={<>Book <TitleMark tone="light">uforpligtende</TitleMark> besigtigelse</>}
           subtitle="Vælg den måde der passer dig — vi ringer dig op, eller du booker direkte i Adams kalender. Gratis og uden binding."
           breadcrumbs={[
             { label: "Forside", href: "/" },

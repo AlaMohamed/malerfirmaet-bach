@@ -5,6 +5,7 @@ import { uploadLead } from "@/lib/drive";
 import { sendAdminLeadNotification, sendContactConfirmation } from "@/lib/email";
 import { findCallsForPhone } from "@/lib/retell";
 import { logEvent, newSubmissionContext } from "@/lib/submission-log";
+import { shrinkForUpload } from "@/lib/image-resize";
 
 /**
  * Contact form endpoint (multipart).
@@ -30,7 +31,7 @@ import { logEvent, newSubmissionContext } from "@/lib/submission-log";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const MAX_FILES = 5;
+const MAX_FILES = 10;
 const MAX_TOTAL_BYTES = 20 * 1024 * 1024;
 const ACCEPTED_MIME = new Set(["image/jpeg", "image/png", "image/heic", "image/heif"]);
 
@@ -150,10 +151,32 @@ export async function POST(request: Request) {
       const buf = Buffer.from(await f.arrayBuffer());
       files.push({ name: f.name, type: f.type, bytes: buf });
     }
+
+    // 4b. Server-side resize/recompress to keep Drive + email payloads
+    //     small. shrinkForUpload is best-effort — if sharp can't decode
+    //     a particular buffer (corrupt, exotic format) the original is
+    //     returned unchanged so the upload still succeeds. Runs in
+    //     parallel since each file is independent.
+    const resized = await Promise.all(files.map(shrinkForUpload));
+    const totalBytesBefore = totalBytes;
+    const totalBytesAfter = resized.reduce((s, f) => s + f.bytes.length, 0);
+    // Replace the working buffer set in place so downstream sees the
+    // smaller files.
+    files.length = 0;
+    files.push(...resized);
+
     logEvent(ctx, {
       area: "files",
       status: "ok",
-      meta: { count: files.length, totalBytes, names: files.map((f) => f.name) },
+      meta: {
+        count: files.length,
+        totalBytesIn: totalBytesBefore,
+        totalBytesOut: totalBytesAfter,
+        reductionPct: totalBytesBefore > 0
+          ? Math.round((1 - totalBytesAfter / totalBytesBefore) * 100)
+          : 0,
+        names: files.map((f) => f.name),
+      },
     });
 
     // 5. Drive upload — non-throwing, error captured for admin email

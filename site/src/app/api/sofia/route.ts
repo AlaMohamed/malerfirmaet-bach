@@ -28,6 +28,13 @@ const Schema = z.object({
   navn: z.string().min(2).max(120),
   telefon: z.string().min(8).max(20),
   email: z.string().email(),
+  // Optional address trio — when filled, passes to Sofia as dynamic
+  // variables so she can confirm rather than ask. All three are
+  // independently optional (a customer might know the street but not
+  // the postal code, or vice versa).
+  adresse: z.string().max(200).optional().default(""),
+  postnummer: z.string().max(10).optional().default(""),
+  by: z.string().max(80).optional().default(""),
   samtykke: z.literal(true),
   kilde: z.string().optional(),
   turnstileToken: z.string().optional().default(""),
@@ -109,12 +116,24 @@ export async function POST(request: Request) {
     let callTriggered = false;
     let scheduledFor: "asap" | "next-business-day" = "next-business-day";
 
+    // Normalise the optional address fields into a single trim'd record
+    // we can pass to Retell as dynamic variables AND surface in the
+    // admin email. Empty strings stay empty rather than appearing as
+    // "undefined" in Adam's inbox.
+    const customerAddress = parsed.data.adresse.trim();
+    const customerPostal = parsed.data.postnummer.trim();
+    const customerCity = parsed.data.by.trim();
+    const hasAddressData = !!(customerAddress || customerPostal || customerCity);
+
     if (withinHours && retellConfigured) {
       // Within hours: ring kunden NU via Sofia
       const r = await createOutboundCall({
         toNumber: phoneE164,
         customerName: parsed.data.navn,
         customerEmail: parsed.data.email,
+        customerAddress,
+        customerPostal,
+        customerCity,
         metadata: { source: "ring-mig-op-form", submission_id: ctx.id },
       });
       callTriggered = r.ok && !r.stub;
@@ -136,11 +155,29 @@ export async function POST(request: Request) {
     }
 
     // Always notify Adam — sikkerhedsnet
-    const note = callTriggered
+    const baseNote = callTriggered
       ? `Sofia ringer kunden op NU. Hvis hun ikke når at booke en tid, ringer du selv op.`
       : retellConfigured
       ? `Henvendelse uden for åbningstid. Sofia ringer næste hverdag morgen. Du kan også ringe manuelt.`
       : `Sofia er endnu ikke aktiveret (manglende RETELL_FROM_NUMBER). Ring kunden op manuelt.`;
+
+    // Append the customer-supplied address details when present — Adam
+    // gets them at a glance, AND Sofia has already received them as
+    // dynamic variables so the call should reference them.
+    const addressLine = hasAddressData
+      ? [
+          customerAddress || null,
+          customerPostal && customerCity
+            ? `${customerPostal} ${customerCity}`
+            : customerPostal || customerCity || null,
+        ]
+          .filter(Boolean)
+          .join(", ")
+      : "";
+
+    const note = addressLine
+      ? `${baseNote}\n\nKunden angav adresse:\n${addressLine}`
+      : baseNote;
 
     // Only look up call history when Sofia ISN'T calling right now. If she
     // is calling now (callTriggered=true), the "Sofia ringer kunden op NU"

@@ -31,6 +31,12 @@ export function SofiaCallback() {
       navn: String(fd.get("navn") ?? ""),
       telefon: String(fd.get("telefon") ?? ""),
       email: String(fd.get("email") ?? ""),
+      // Optional — Sofia receives these as dynamic variables and can
+      // confirm rather than ask. Empty strings are fine; the API
+      // schema makes them optional.
+      adresse: String(fd.get("adresse") ?? ""),
+      postnummer: String(fd.get("postnummer") ?? ""),
+      by: String(fd.get("by") ?? ""),
       samtykke: fd.get("samtykke") === "on",
       kilde: "sofia-callback",
       turnstileToken,
@@ -137,6 +143,56 @@ export function SofiaCallback() {
           placeholder="din@email.dk"
         />
       </div>
+
+      {/* Optional address — pre-fills Sofia's address-confirmation step so
+          she can confirm rather than ask. Postnummer + by share a row
+          (grid-cols-3, postnummer = 1 col, by = 2 cols) so the section
+          doesn't dominate the form when it's not strictly needed. */}
+      <div>
+        <label htmlFor="sofia-adresse" className="block text-[10px] font-semibold uppercase tracking-widest text-warm-gray mb-2">
+          Adresse <span className="text-charcoal/40 normal-case tracking-normal">(valgfri — gør samtalen hurtigere)</span>
+        </label>
+        <input
+          id="sofia-adresse"
+          name="adresse"
+          type="text"
+          autoComplete="street-address"
+          className="w-full rounded-lg border border-warm-light bg-cream-200 px-4 py-3 text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition-colors"
+          placeholder="Vejnavn og husnummer"
+        />
+      </div>
+      <div className="grid grid-cols-3 gap-3">
+        <div>
+          <label htmlFor="sofia-postnummer" className="block text-[10px] font-semibold uppercase tracking-widest text-warm-gray mb-2">
+            Postnr.
+          </label>
+          <input
+            id="sofia-postnummer"
+            name="postnummer"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]{4}"
+            maxLength={4}
+            autoComplete="postal-code"
+            className="w-full rounded-lg border border-warm-light bg-cream-200 px-4 py-3 text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition-colors"
+            placeholder="2860"
+          />
+        </div>
+        <div className="col-span-2">
+          <label htmlFor="sofia-by" className="block text-[10px] font-semibold uppercase tracking-widest text-warm-gray mb-2">
+            By
+          </label>
+          <input
+            id="sofia-by"
+            name="by"
+            type="text"
+            autoComplete="address-level2"
+            className="w-full rounded-lg border border-warm-light bg-cream-200 px-4 py-3 text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition-colors"
+            placeholder="Søborg"
+          />
+        </div>
+      </div>
+
       <label className="flex items-start gap-3 text-xs text-charcoal/65 leading-relaxed">
         <input
           type="checkbox"

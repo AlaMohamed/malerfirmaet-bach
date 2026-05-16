@@ -1,38 +1,43 @@
 /**
  * /referencer — customer testimonials hub.
  *
- * Server component handles the page chrome (PageHeader, stats strip,
- * featured testimonial, CTA, ContactCta) so it stays statically
- * rendered and SEO-indexable. The filterable grid below is the only
- * interactive part, isolated in <TestimonialGrid> as a client island.
+ * Server-rendered: PageHeader, stats strip, featured card, and a
+ * fixed 2x2 grid of 4 non-featured testimonials. No client filter
+ * (we trimmed the filter UI per Adam's request — at our current
+ * volume of 5 visible testimonials, segmenting by category isn't
+ * worth the interaction cost). Stats strip uses three credibility
+ * signals: total customers, years in business, hotels renovated.
  *
- * Schema.org/Review JSON-LD is emitted once for the whole page so
+ * Schema.org/Review JSON-LD is emitted once at the page level so
  * Google sees a structured "list of reviews about this Organization"
- * — note that Google does NOT surface star snippets for first-party
- * org reviews (only third-party platforms like Trustpilot do), so
- * this is for crawler hygiene rather than rich-result expectations.
+ * — Google does NOT show star snippets for first-party org reviews
+ * (only third-party platforms do), so this is for crawler hygiene
+ * rather than rich-result expectations.
  */
 
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/ui/Container";
 import { PageHeader } from "@/components/PageHeader";
-import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { TitleMark } from "@/components/ui/TitleMark";
 import { TestimonialCard } from "@/components/sections/TestimonialCard";
-import { TestimonialGrid } from "@/components/sections/TestimonialGrid";
 import { ContactCta } from "@/components/sections/ContactCta";
 import {
   testimonials,
   getFeaturedTestimonial,
   getNonFeaturedTestimonials,
-  getTestimonialStats,
 } from "@/content/testimonials";
 import { company } from "@/content/site";
+
+// Years Malerfirmaet Bach has been in business (per Adam, 19+ år).
+const YEARS_IN_BUSINESS = 19;
+// Hard-coded grid size — we render exactly this many cards under the
+// featured testimonial. Excess testimonials in the data file just
+// don't appear on the page; they're still available for editorial
+// rotation.
+const GRID_SIZE = 4;
 
 export const metadata: Metadata = {
   title: "Referencer",
@@ -46,8 +51,7 @@ export const metadata: Metadata = {
 
 export default function ReferencerPage() {
   const featured = getFeaturedTestimonial();
-  const rest = getNonFeaturedTestimonials();
-  const stats = getTestimonialStats();
+  const rest = getNonFeaturedTestimonials().slice(0, GRID_SIZE);
 
   // Schema.org/Review markup — one Review object per testimonial,
   // grouped under the Organization. Avoids per-card duplication.
@@ -72,17 +76,6 @@ export default function ReferencerPage() {
           }
         : {}),
     })),
-    ...(stats.averageRating
-      ? {
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: stats.averageRating.toFixed(1),
-            reviewCount: stats.withRatings,
-            bestRating: 5,
-            worstRating: 1,
-          },
-        }
-      : {}),
   };
 
   return (
@@ -96,9 +89,8 @@ export default function ReferencerPage() {
           breadcrumbs={[{ label: "Forside", href: "/" }, { label: "Referencer" }]}
         />
 
-        {/* Stats strip — three quick credibility signals.
-            Reads naturally as "X tilfredse kunder · gennemsnit · 12+ hoteller".
-            Numbers come from the data layer where possible. */}
+        {/* Stats strip — three credibility signals.
+            Reads naturally: tilfredse kunder · år i branchen · hoteller renoveret. */}
         <section className="bg-cream-50 border-b border-warm-light/60">
           <Container className="py-10">
             <dl className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
@@ -107,16 +99,15 @@ export default function ReferencerPage() {
                   Tilfredse kunder
                 </dt>
                 <dd className="font-serif text-3xl text-charcoal-dark">
-                  {stats.total}+
+                  {testimonials.length}+
                 </dd>
               </div>
               <div>
                 <dt className="text-[10px] uppercase tracking-widest text-warm-gray font-semibold mb-2">
-                  Gennemsnitlig vurdering
+                  År i branchen
                 </dt>
                 <dd className="font-serif text-3xl text-charcoal-dark">
-                  {stats.averageRating ? stats.averageRating.toFixed(1) : "—"}
-                  <span className="text-brand-400">/5</span>
+                  {YEARS_IN_BUSINESS}+
                 </dd>
               </div>
               <div>
@@ -141,8 +132,10 @@ export default function ReferencerPage() {
           </section>
         )}
 
-        {/* Filterable grid of remaining testimonials.
-            Client component handles the chip state in isolation. */}
+        {/* Fixed grid of 4 non-featured testimonials.
+            2 columns on desktop, 1 column on mobile. No filter — at
+            five visible cards the segmenting cost outweighs the
+            navigation benefit. */}
         <section className="py-20 bg-cream-50">
           <Container className="max-w-6xl">
             <div className="text-center mb-12">
@@ -151,33 +144,10 @@ export default function ReferencerPage() {
                 Læs hvad vores <TitleMark>kunder</TitleMark> siger
               </h2>
             </div>
-            <TestimonialGrid testimonials={rest} />
-          </Container>
-        </section>
-
-        {/* Mid-page CTA — converts engaged readers into leads.
-            Visually distinct from the footer CTA so it doesn't feel
-            like a duplicate. */}
-        <section className="py-20 bg-cream-200">
-          <Container className="max-w-3xl text-center">
-            <Eyebrow>Næste skridt</Eyebrow>
-            <h2 className="font-serif text-display-md mt-4 mb-5 text-balance">
-              Vil du være vores næste <TitleMark>tilfredse kunde</TitleMark>?
-            </h2>
-            <p className="text-charcoal/70 leading-relaxed mb-9 text-pretty">
-              Send os din opgave — vi besigter gratis og uforpligtende, og sender et skriftligt tilbud inden for 1-2 hverdage.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/book-besigtigelse" size="lg" withArrow>
-                Book besigtigelse
-              </Button>
-              <Link
-                href="/projekter"
-                className="inline-flex items-center gap-2 text-sm font-medium text-charcoal-dark hover:text-brand-500 transition-colors"
-              >
-                Se vores projekter
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </Link>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+              {rest.map((t) => (
+                <TestimonialCard key={t.id} testimonial={t} />
+              ))}
             </div>
           </Container>
         </section>
