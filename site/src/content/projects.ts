@@ -77,10 +77,10 @@ export const projects: Project[] = [
       "Arbejdet blev udført i perioden august 2025 til januar 2026 med fokus på effektiv planlægning og sikker gennemførelse. Der er anvendt et bredt udvalg af farver og overfladebehandlinger, hvilket har bidraget til et moderne og visuelt stærkt arbejdsmiljø.",
       "Resultatet er funktionelle og æstetisk gennemførte rammer, der understøtter dagligdagen for medarbejderne.",
     ],
-    hero: "/images/projects/novo-lyngby/20251002_143715.jpg",
-    thumbnail: "/images/projects/novo-lyngby/20251002_143715.jpg",
+    hero: "/images/projects/novo-lyngby/20251002_143825.jpg",
+    thumbnail: "/images/projects/novo-lyngby/20251002_143825.jpg",
     gallery: [
-      { src: "/images/projects/novo-lyngby/20251002_143715.jpg", alt: "Novo Nordisk Lyngby – kontorområde", tag: "efter" },
+      { src: "/images/projects/novo-lyngby/20251002_143825.jpg", alt: "Novo Nordisk Lyngby – kontorområde", tag: "efter" },
       { src: "/images/projects/novo-lyngby/20251002_143720.jpg", alt: "Novo Nordisk Lyngby – gang", tag: "efter" },
       { src: "/images/projects/novo-lyngby/20251002_143739.jpg", alt: "Novo Nordisk Lyngby – mødelokale", tag: "efter" },
       { src: "/images/projects/novo-lyngby/20251002_143746.jpg", alt: "Novo Nordisk Lyngby – detalje", tag: "efter" },

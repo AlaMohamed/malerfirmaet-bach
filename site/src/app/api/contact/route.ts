@@ -40,6 +40,11 @@ const Schema = z.object({
   telefon: z.string().min(8),
   email: z.string().email(),
   adresse: z.string().optional().default(""),
+  // Optional postal code + city — both share a row in the UI but
+  // submit as separate fields so the admin email + Drive folder
+  // naming can use either independently.
+  postnummer: z.string().optional().default(""),
+  by: z.string().optional().default(""),
   opgavetype: z.string().optional().default(""),
   besked: z.string().min(5),
   samtykke: z.literal("true", { message: "Samtykke er påkrævet" }),
@@ -84,6 +89,8 @@ export async function POST(request: Request) {
       telefon: String(form.get("telefon") ?? ""),
       email: String(form.get("email") ?? ""),
       adresse: String(form.get("adresse") ?? ""),
+      postnummer: String(form.get("postnummer") ?? ""),
+      by: String(form.get("by") ?? ""),
       opgavetype: String(form.get("opgavetype") ?? ""),
       besked: String(form.get("besked") ?? ""),
       samtykke: String(form.get("samtykke") ?? "false"),
@@ -109,6 +116,8 @@ export async function POST(request: Request) {
         phoneRedacted: redactPhone(parsed.data.telefon),
         opgavetype: parsed.data.opgavetype || null,
         adresse: parsed.data.adresse || null,
+        postnummer: parsed.data.postnummer || null,
+        by: parsed.data.by || null,
         beskedLen: parsed.data.besked.length,
       },
     });
@@ -179,11 +188,25 @@ export async function POST(request: Request) {
       },
     });
 
+    // Combine the three optional address fields into a single
+    // human-readable line for the Drive folder name and the email
+    // bodies. Each piece is optional so the result is built defensively
+    // — "Hovedgaden 1, 2860 Søborg" when all three are present, just
+    // "Hovedgaden 1" or "2860 Søborg" otherwise. Empty when nothing
+    // is supplied.
+    const cityLine = [parsed.data.postnummer, parsed.data.by]
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .join(" ");
+    const fullAddress = [parsed.data.adresse.trim(), cityLine]
+      .filter(Boolean)
+      .join(", ");
+
     // 5. Drive upload — non-throwing, error captured for admin email
     const drive = await uploadLead({
       customer: parsed.data.navn,
       source: "kontakt",
-      address: parsed.data.adresse || undefined,
+      address: fullAddress || undefined,
       files,
     });
     if (drive.error) {
@@ -220,10 +243,12 @@ export async function POST(request: Request) {
       });
     }
 
-    // 6. Build admin-email context (kept human-readable)
+    // 6. Build admin-email context (kept human-readable).
+    //    Use the combined fullAddress so the admin email shows
+    //    "Hovedgaden 1, 2860 Søborg" rather than a bare street.
     const adminContext = [
       parsed.data.opgavetype ? `Opgavetype: ${parsed.data.opgavetype}` : null,
-      parsed.data.adresse ? `Adresse: ${parsed.data.adresse}` : null,
+      fullAddress ? `Adresse: ${fullAddress}` : null,
       `Besked:\n${parsed.data.besked}`,
     ]
       .filter(Boolean)
@@ -273,7 +298,10 @@ export async function POST(request: Request) {
         customerName: parsed.data.navn,
         besked: parsed.data.besked,
         opgavetype: parsed.data.opgavetype || undefined,
-        adresse: parsed.data.adresse || undefined,
+        // Customer email shows the same combined address line — saves
+        // them having to recombine street + postal + city from
+        // separate fields in the receipt.
+        adresse: fullAddress || undefined,
       }),
     ]);
 

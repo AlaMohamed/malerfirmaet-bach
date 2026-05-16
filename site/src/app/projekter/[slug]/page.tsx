@@ -114,16 +114,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </section>
 
         {/* Story.
-            First paragraph rendered as a slightly larger lead so the
-            opening sentence has visual weight — a common print-design
-            move that makes long-form copy more inviting. Subsequent
-            paragraphs use the standard body size. */}
+            Eyebrow "Om projektet" alone is enough — the previous
+            "Projektbeskrivelse" H2 underneath was redundant. Removing
+            it lets the lead paragraph (rendered slightly larger) carry
+            the section opener directly, a common editorial pattern. */}
         <section className="py-24 bg-cream-200">
           <Container className="max-w-3xl">
-            <Eyebrow>Om projektet</Eyebrow>
-            <h2 className="font-serif text-display-md mt-4 mb-8 text-balance">
-              Projektbeskrivelse
-            </h2>
+            <div className="mb-8"><Eyebrow>Om projektet</Eyebrow></div>
             <div className="text-charcoal/80 text-pretty">
               {project.description.map((p, i) => (
                 <p

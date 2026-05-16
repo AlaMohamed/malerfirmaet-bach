@@ -54,7 +54,7 @@ export default function PrivacyPage() {
                 <li><strong>Cloudflare Turnstile</strong> (spam-beskyttelse, USA — SCC) — verificerer at indsendere ikke er bots; ingen persondata sættes i cookies</li>
                 <li><strong>Resend</strong> (e-mail-leverance, EU) — afsendelse af bekræftelser</li>
                 <li><strong>Calendly</strong> (booking-kalender, USA — SCC) — planlægning af møder</li>
-                <li><strong>Retell AI / Twilio</strong> (AI-opkald + telefonnummer, USA — SCC) — Sofia ringer dig op</li>
+                <li><strong>Retell AI / Twilio</strong> (AI-opkald + telefonnummer, USA — SCC) — Sofia ringer dig op fra <strong>+45 91 30 95 35</strong></li>
                 <li><strong>Make.com</strong> (automatisering, EU) — flytter data mellem systemer</li>
                 <li><strong>Airtable</strong> (CRM, USA — SCC) — opbevarer leads</li>
                 <li><strong>Google Drive</strong> (filopbevaring, EU) — opbevarer billeder du uploader i kontakt- eller booking-formularen; vi opretter en mappe pr. sag</li>

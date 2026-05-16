@@ -19,6 +19,8 @@ const FIELD_LABELS: Record<string, string> = {
   email: "E-mail",
   besked: "Beskrivelse af opgaven",
   adresse: "Adresse",
+  postnummer: "Postnummer",
+  by: "By",
   opgavetype: "Opgavetype",
   samtykke: "Accept af privatlivspolitik",
 };
@@ -125,6 +127,42 @@ export function ContactForm() {
       </div>
       <Field id="email" label="E-mail" required type="email" autoComplete="email" placeholder="din@email.dk" />
       <Field id="adresse" label="Adresse for opgaven" autoComplete="street-address" placeholder="Valgfri" />
+
+      {/* Optional postnr + by — laid out grid-cols-3 (1 col + 2 col) so
+          postnummer stays compact and by gets the room it needs. Both
+          are optional; submitting an empty form still works. */}
+      <div className="grid grid-cols-3 gap-5">
+        <div>
+          <label htmlFor="postnummer" className="block text-[10px] font-semibold uppercase tracking-widest text-warm-gray mb-2">
+            Postnr.
+          </label>
+          <input
+            id="postnummer"
+            name="postnummer"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]{4}"
+            maxLength={4}
+            autoComplete="postal-code"
+            placeholder="Valgfri"
+            className="w-full rounded-lg border border-warm-light bg-cream-200 px-4 py-3 text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition-colors"
+          />
+        </div>
+        <div className="col-span-2">
+          <label htmlFor="by" className="block text-[10px] font-semibold uppercase tracking-widest text-warm-gray mb-2">
+            By
+          </label>
+          <input
+            id="by"
+            name="by"
+            type="text"
+            autoComplete="address-level2"
+            placeholder="Valgfri"
+            className="w-full rounded-lg border border-warm-light bg-cream-200 px-4 py-3 text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition-colors"
+          />
+        </div>
+      </div>
+
       <div>
         <label htmlFor="opgavetype" className="block text-[10px] font-semibold uppercase tracking-widest text-warm-gray mb-2">
           Type af opgave

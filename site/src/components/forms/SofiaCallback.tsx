@@ -87,8 +87,8 @@ export function SofiaCallback() {
           </div>
           <p className="text-charcoal/70 text-sm leading-relaxed">
             {asap
-              ? "Sofia ringer dig op fra et dansk +45-nummer nu. Sørg for at have din mobil i nærheden."
-              : "Sofia ringer dig fra et dansk +45-nummer så snart Adams arbejdsdag starter (man–fre fra kl. 06:00). Vi sender også en bekræftelses-email."}
+              ? "Sofia ringer dig op fra +45 91 30 95 35 nu. Sørg for at have din mobil i nærheden."
+              : "Sofia ringer dig fra +45 91 30 95 35 så snart Adams arbejdsdag starter (man–fre fra kl. 06:00). Vi sender også en bekræftelses-email."}
           </p>
         </div>
       </div>
@@ -201,7 +201,7 @@ export function SofiaCallback() {
           className="mt-0.5 h-4 w-4 rounded border-warm-light text-brand-400 focus:ring-brand-400 cursor-pointer"
         />
         <span>
-          Jeg accepterer at <strong>Sofia (AI-agent)</strong> ringer mig op fra et dansk +45-nummer,
+          Jeg accepterer at <strong>Sofia (AI-agent)</strong> ringer mig op fra <strong>+45 91 30 95 35</strong>,
           og at samtalen kan optages for kvalitetssikring. Jeg har læst{" "}
           <a href="/privatlivspolitik" className="underline hover:text-brand-500">privatlivspolitikken</a>.
         </span>
