@@ -36,9 +36,11 @@ import { usePathname, useSearchParams } from "next/navigation";
 import Script from "next/script";
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   interface Window {
-    gtag?: (...args: any[]) => void;
+    // gtag's command-style API takes a string verb plus arbitrary args.
+    // `unknown` is correct here because each verb has its own arg shape
+    // (config / event / js / set) — narrower typing would lie.
+    gtag?: (command: string, ...args: unknown[]) => void;
     dataLayer?: unknown[];
   }
 }
