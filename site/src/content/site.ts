@@ -127,13 +127,10 @@ export const processSteps = [
   },
 ];
 
-export const testimonial = {
-  quote:
-    "Adam var meget serviceminded og resultatorienteret. De leverede et fremragende stykke kvalitetshåndværk og overholdt den aftalte tid og pris. Efter totalrenovationen kom kommunen på besøg og godkendte alt det udførte arbejde.",
-  author: "Ingolf & Ghufran",
-  role: "Børnehaveprojekt · Totalrenovering",
-  initials: "IG",
-};
+// The legacy single-testimonial export was replaced by the structured
+// testimonials catalogue in content/testimonials.ts — kept here as a
+// breadcrumb in case external tooling (Sofia KB?) still grep'd for it.
+// Safe to delete after one production cycle without complaints.
 
 /**
  * Trusted-by ticker on the homepage.
@@ -216,6 +213,7 @@ export const nav = {
   primary: [
     { label: "Forside", href: "/" },
     { label: "Projekter", href: "/projekter" },
+    { label: "Referencer", href: "/referencer" },
     { label: "Om os", href: "/om-os" },
     { label: "Kontakt", href: "/kontakt" },
   ],

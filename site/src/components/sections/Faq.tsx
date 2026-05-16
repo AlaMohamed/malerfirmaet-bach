@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { Container } from "../ui/Container";
 import { Eyebrow } from "../ui/Eyebrow";
+import { TitleMark } from "../ui/TitleMark";
 import { faq } from "@/content/site";
 
 export function Faq() {
@@ -16,7 +17,7 @@ export function Faq() {
         <div className="text-center mb-16">
           <div className="flex justify-center"><Eyebrow>Spørgsmål og svar</Eyebrow></div>
           <h2 id="faq-heading" className="font-serif text-display-lg mt-4 text-balance">
-            Ofte stillede spørgsmål
+            Ofte stillede <TitleMark>spørgsmål</TitleMark>
           </h2>
         </div>
         <ul className="divide-y divide-warm-light/70">

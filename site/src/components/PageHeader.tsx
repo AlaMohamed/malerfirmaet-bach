@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
@@ -6,7 +7,9 @@ import { Eyebrow } from "./ui/Eyebrow";
 
 interface PageHeaderProps {
   eyebrow: string;
-  title: string;
+  // Accepts a ReactNode so consumers can embed <TitleMark> to highlight
+  // a word inside the title — e.g. title={<>Skriv eller <TitleMark tone="light">ring</TitleMark></>}.
+  title: ReactNode;
   subtitle?: string;
   breadcrumbs?: { label: string; href?: string }[];
   bgImage?: string;

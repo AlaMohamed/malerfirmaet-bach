@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Container } from "../ui/Container";
 import { Eyebrow } from "../ui/Eyebrow";
 import { Button } from "../ui/Button";
+import { TitleMark } from "../ui/TitleMark";
 import { company } from "@/content/site";
 
 export function ContactCta() {
@@ -19,7 +20,7 @@ export function ContactCta() {
         >
           <div className="flex justify-center"><Eyebrow tone="light">Næste projekt</Eyebrow></div>
           <h2 className="font-serif text-display-lg mt-5 text-white text-balance">
-            Skal dit projekt være det næste?
+            Skal <TitleMark tone="light">dit projekt</TitleMark> være det næste?
           </h2>
           <p className="mt-6 text-white/70 leading-relaxed text-pretty">
             Kontakt os for et gratis og uforpligtende tilbud. Vi besigter opgaven og sender et skriftligt tilbud inden for 1–2 hverdage.

@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Container } from "@/components/ui/Container";
 import { PageHeader } from "@/components/PageHeader";
 import { ContactForm } from "@/components/forms/ContactForm";
+import { TitleMark } from "@/components/ui/TitleMark";
 import { company } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -20,7 +21,7 @@ export default function KontaktPage() {
       <main>
         <PageHeader
           eyebrow="Kontakt os"
-          title="Skriv eller ring"
+          title={<>Skriv eller <TitleMark tone="light">ring</TitleMark></>}
           subtitle="Beskriv din opgave så vender vi tilbage hurtigst muligt — typisk inden for 24 timer på hverdage."
           breadcrumbs={[{ label: "Forside", href: "/" }, { label: "Kontakt" }]}
         />

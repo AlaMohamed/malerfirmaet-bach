@@ -116,6 +116,7 @@ export function Footer() {
             </p>
             <ul className="space-y-3 text-sm text-cream-200/70">
               <li><Link href="/projekter" className="hover:text-white transition-colors">Projekter</Link></li>
+              <li><Link href="/referencer" className="hover:text-white transition-colors">Referencer</Link></li>
               <li><Link href="/om-os" className="hover:text-white transition-colors">Om os</Link></li>
               <li><Link href="/book-besigtigelse" className="hover:text-white transition-colors">Book besigtigelse</Link></li>
               <li><Link href="/kontakt" className="hover:text-white transition-colors">Kontakt</Link></li>

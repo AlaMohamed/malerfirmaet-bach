@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Testimonial } from "@/components/sections/Testimonial";
 import { ContactCta } from "@/components/sections/ContactCta";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { TitleMark } from "@/components/ui/TitleMark";
 import { usps, processSteps } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -23,7 +24,7 @@ export default function OmOsPage() {
       <main>
         <PageHeader
           eyebrow="Om os"
-          title="Et ord er et ord."
+          title={<>Et <TitleMark tone="light">ord</TitleMark> er et <TitleMark tone="light">ord</TitleMark>.</>}
           subtitle="Malerfirmaet Bach ApS er drevet af malermester Adam — med fokus på ordholdenhed, kvalitet og klar dialog. Vi tager aftaler alvorligt."
           breadcrumbs={[{ label: "Forside", href: "/" }, { label: "Om os" }]}
         />
@@ -34,7 +35,7 @@ export default function OmOsPage() {
               <div>
                 <Eyebrow>Vores historie</Eyebrow>
                 <h2 className="font-serif text-display-md mt-4 mb-6 text-balance">
-                  Bygget på håndværk og ordholdenhed
+                  Bygget på håndværk og <TitleMark>ordholdenhed</TitleMark>
                 </h2>
                 <div className="space-y-5 text-charcoal/75 leading-relaxed text-pretty">
                   <p>
@@ -44,7 +45,7 @@ export default function OmOsPage() {
                     I dag har vi malet for Radisson Blu, Scandic Hvidovre, Hotel Sanders, Carlsberg Byen, Novo Nordisk, kommunens børnehaver og hundredvis af private hjem på Sjælland.
                   </p>
                   <p>
-                    Adam, vores indehaver og malermester, står selv for den første besigtigelse — så du ved hvem du har med at gøre fra dag ét.
+                    Adam, vores malermester, står selv for den første besigtigelse — så du ved hvem du har med at gøre fra dag ét.
                   </p>
                 </div>
               </div>
@@ -66,7 +67,7 @@ export default function OmOsPage() {
               <div>
                 <Eyebrow>Værdier</Eyebrow>
                 <h2 className="font-serif text-display-md mt-4 mb-8 text-balance">
-                  Hvad du kan forvente
+                  Hvad du kan <TitleMark>forvente</TitleMark>
                 </h2>
               </div>
               <div>
