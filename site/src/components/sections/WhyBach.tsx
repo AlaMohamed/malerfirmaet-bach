@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { Container } from "../ui/Container";
 import { Eyebrow } from "../ui/Eyebrow";
+import { TitleMark } from "../ui/TitleMark";
 import { usps } from "@/content/site";
 
 export function WhyBach() {
@@ -15,7 +16,7 @@ export function WhyBach() {
           <div>
             <Eyebrow>Hvad du kan forvente</Eyebrow>
             <h2 className="font-serif text-display-lg mt-4 text-balance">
-              Ordholdenhed er ikke et løfte.<br className="hidden md:block" /> Det er vores arbejdsmetode.
+              Ordholdenhed er ikke et løfte.<br className="hidden md:block" /> Det er <TitleMark>vores arbejdsmetode</TitleMark>.
             </h2>
             <p className="mt-6 text-charcoal/70 leading-relaxed text-pretty">
               Vi er et malerfirma der tager aftaler alvorligt. Uanset om det er et hotelværelse eller en børnehave, leverer vi det vi lover — til aftalt tid og pris.

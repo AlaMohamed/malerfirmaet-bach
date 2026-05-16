@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Container } from "../ui/Container";
 import { Eyebrow } from "../ui/Eyebrow";
+import { TitleMark } from "../ui/TitleMark";
 import { processSteps } from "@/content/site";
 
 export function Process() {
@@ -12,7 +13,7 @@ export function Process() {
         <div className="text-center mb-20 max-w-3xl mx-auto">
           <div className="flex justify-center"><Eyebrow>Vores tilgang</Eyebrow></div>
           <h2 className="font-serif text-display-lg mt-4 text-balance">
-            Fra første opkald til færdigt arbejde
+            Fra <TitleMark>første opkald</TitleMark> til <TitleMark>færdigt arbejde</TitleMark>
           </h2>
         </div>
 

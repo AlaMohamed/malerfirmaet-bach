@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Container } from "../ui/Container";
 import { Eyebrow } from "../ui/Eyebrow";
+import { TitleMark } from "../ui/TitleMark";
 import { getFeaturedProjects } from "@/content/projects";
 
 export function ProjectsPreview() {
@@ -19,7 +20,7 @@ export function ProjectsPreview() {
           <div>
             <Eyebrow tone="light">Vores arbejde</Eyebrow>
             <h2 className="font-serif text-display-lg mt-4 text-white text-balance">
-              Resultater der taler<br className="hidden md:block" /> for sig selv
+              Resultater der taler<br className="hidden md:block" /> <TitleMark tone="light">for sig selv</TitleMark>
             </h2>
           </div>
           <Link
