@@ -76,8 +76,26 @@ export async function POST(request: Request) {
   const customerEmail = call.retell_llm_dynamic_variables?.customer_email ?? "—";
   const durationSec = Math.round((call.duration_ms ?? 0) / 1000);
   const summary = call.call_analysis?.call_summary ?? "(intet resume)";
-  const sentiment = call.call_analysis?.user_sentiment ?? "—";
+  const sentimentRaw = call.call_analysis?.user_sentiment ?? "";
   const successful = call.call_analysis?.call_successful;
+
+  // Format duration as "mm:ss" so Adam can scan it as "how long the call took"
+  // rather than mentally converting 223 seconds → 3:43. Padded seconds keep
+  // the alignment consistent in monospaced inboxes.
+  const minutes = Math.floor(durationSec / 60);
+  const seconds = durationSec % 60;
+  const durationFormatted = `${minutes}:${String(seconds).padStart(2, "0")}`;
+
+  // Translate Retell's English sentiment labels into Danish so the whole
+  // email reads in one language. Unknown / missing values fall through to
+  // "—" so Adam isn't left wondering whether the call was good or bad.
+  const SENTIMENT_DA: Record<string, string> = {
+    Positive: "Positiv",
+    Neutral: "Neutral",
+    Negative: "Negativ",
+    Unknown: "Ukendt",
+  };
+  const sentiment = SENTIMENT_DA[sentimentRaw] ?? sentimentRaw ?? "—";
 
   // Outcome heuristic
   let outcome = "Ukendt resultat";
@@ -86,7 +104,7 @@ export async function POST(request: Request) {
 
   const context = [
     `Resultat: ${outcome}`,
-    `Varighed: ${durationSec} sek`,
+    `Varighed: ${durationFormatted}`,
     `Sentiment: ${sentiment}`,
     ``,
     `Sofias resume:`,
