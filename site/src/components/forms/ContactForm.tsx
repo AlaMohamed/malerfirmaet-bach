@@ -126,11 +126,13 @@ export function ContactForm() {
         <Field id="telefon" label="Telefon" required type="tel" autoComplete="tel" placeholder="Telefonnummer" />
       </div>
       <Field id="email" label="E-mail" required type="email" autoComplete="email" placeholder="din@email.dk" />
-      <Field id="adresse" label="Adresse for opgaven" autoComplete="street-address" placeholder="Valgfri" />
+      <Field id="adresse" label="Adresse for opgaven" autoComplete="street-address" placeholder="Vejnavn og husnummer" />
 
       {/* Optional postnr + by — laid out grid-cols-3 (1 col + 2 col) so
           postnummer stays compact and by gets the room it needs. Both
-          are optional; submitting an empty form still works. */}
+          are optional; submitting an empty form still works.
+          Placeholders match SofiaCallback for visual consistency
+          across the two forms. */}
       <div className="grid grid-cols-3 gap-5">
         <div>
           <label htmlFor="postnummer" className="block text-[10px] font-semibold uppercase tracking-widest text-warm-gray mb-2">
@@ -144,7 +146,7 @@ export function ContactForm() {
             pattern="[0-9]{4}"
             maxLength={4}
             autoComplete="postal-code"
-            placeholder="Valgfri"
+            placeholder="2860"
             className="w-full rounded-lg border border-warm-light bg-cream-200 px-4 py-3 text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition-colors"
           />
         </div>
@@ -157,7 +159,7 @@ export function ContactForm() {
             name="by"
             type="text"
             autoComplete="address-level2"
-            placeholder="Valgfri"
+            placeholder="Søborg"
             className="w-full rounded-lg border border-warm-light bg-cream-200 px-4 py-3 text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition-colors"
           />
         </div>
