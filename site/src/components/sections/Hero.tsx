@@ -51,6 +51,7 @@ export function Hero() {
             {hero.titleA}
             <br />
             <em className="not-italic text-brand-200">{hero.titleB}</em>
+            {" "}&
             <br />
             {hero.titleC}
           </motion.h1>

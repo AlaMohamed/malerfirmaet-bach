@@ -35,7 +35,7 @@ export const hero = {
   eyebrow: "København & Sjælland",
   titleA: "Malerfirmaet bag",
   titleB: "Novo Nordisk",
-  titleC: "og Go Hotel Herlev.",
+  titleC: "Go Hotel Herlev.",
   sub: "Erhvervs- og privatmaling i København og på Sjælland. Vi holder aftalt tid og pris — og kvaliteten ses på håndværket.",
   ctaPrimary: { label: "Book uforpligtende besigtigelse", href: "/book-besigtigelse" },
   ctaSecondary: { label: "Se projekter", href: "/projekter" },

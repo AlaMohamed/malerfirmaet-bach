@@ -26,21 +26,24 @@ export function Footer() {
       <Container className="py-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
           <div className="md:col-span-5">
-            <Image
-              src="/logo-footer.png"
-              alt={company.name}
-              width={682}
-              height={243}
-              className="h-20 sm:h-24 lg:h-28 w-auto brightness-0 invert opacity-95 mb-3 -ml-1"
-              priority={false}
-            />
-            {/* Tagline rendered as styled text directly under the logo so it
-                visually reads as part of the lock-up. The PNG itself omits
-                the tagline; we render it here so we can keep it in sync
-                with company.tagline without touching the artwork. */}
-            <p className="font-serif italic text-cream-200/70 text-base sm:text-lg mb-6 -mt-1 ml-1">
-              {company.tagline}
-            </p>
+            {/* Logo + tagline as one lockup. The footer-logo PNG ends with
+                the "Bach ApS" wordmark — we tuck the tagline immediately
+                beneath it so it reads as a single logo unit, like the
+                primary brand logo where the tagline sits under "Bach ApS"
+                (here in white to match the inverted PNG). */}
+            <div className="mb-7 -ml-1">
+              <Image
+                src="/logo-footer.png"
+                alt={company.name}
+                width={682}
+                height={243}
+                className="h-20 sm:h-24 lg:h-28 w-auto brightness-0 invert opacity-95"
+                priority={false}
+              />
+              <p className="font-serif italic text-cream-200/70 text-sm sm:text-base -mt-3 sm:-mt-4 ml-3 sm:ml-4 tracking-wide">
+                {company.tagline}
+              </p>
+            </div>
             <p className="text-cream-200/55 text-sm leading-relaxed max-w-md">
               Professionel maling til erhverv og privat i {company.areas.join(" og ")}. Ordholdenhed er ikke et løfte — det er vores arbejdsmetode.
             </p>
@@ -123,15 +126,16 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-white/8 text-cream-200/35 text-xs">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
-            <p>© {year} {company.name}. Alle rettigheder forbeholdes.</p>
-            <p className="tracking-wider">
-              CVR {company.cvrFormatted} · {company.address.street} · {company.address.postal} {company.address.city}
-            </p>
-          </div>
-          <p className="mt-4 text-center text-cream-200/30 tracking-wider">
+        <div className="mt-16 pt-8 border-t border-white/8 flex flex-col sm:flex-row justify-between items-center gap-3 text-cream-200/35 text-xs">
+          <p>© {year} {company.name}. Alle rettigheder forbeholdes.</p>
+          {/* Centered credit between the two existing elements — flex
+              justify-between on three items puts left/center/right
+              automatically. On mobile they stack vertically. */}
+          <p className="text-cream-200/30 tracking-wider order-last sm:order-none">
             Designet af Nordsales
+          </p>
+          <p className="tracking-wider">
+            CVR {company.cvrFormatted} · {company.address.street} · {company.address.postal} {company.address.city}
           </p>
         </div>
       </Container>
