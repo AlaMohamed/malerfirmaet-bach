@@ -34,7 +34,7 @@ const Schema = z.object({
   website: z.string().optional().default(""),
 });
 
-// Business hours: Mon–Fri 07:00–17:30 (Europe/Copenhagen)
+// Business hours: Mon–Fri 06:00–17:00 (Europe/Copenhagen)
 function isWithinBusinessHours(d = new Date()): boolean {
   // Use Intl to get the hour/day in Copenhagen regardless of server timezone
   const fmt = new Intl.DateTimeFormat("en-US", {
@@ -47,10 +47,12 @@ function isWithinBusinessHours(d = new Date()): boolean {
   const parts = fmt.formatToParts(d);
   const day = parts.find((p) => p.type === "weekday")?.value ?? "";
   const hour = parseInt(parts.find((p) => p.type === "hour")?.value ?? "0", 10);
-  const min = parseInt(parts.find((p) => p.type === "minute")?.value ?? "0", 10);
+  // minute parsing was only needed for the old half-hour boundary; keep
+  // the parse just in case future logic wants finer granularity.
+  parseInt(parts.find((p) => p.type === "minute")?.value ?? "0", 10);
   const isWeekday = ["Mon", "Tue", "Wed", "Thu", "Fri"].includes(day);
-  const open = hour > 7 || (hour === 7 && min >= 0);
-  const beforeClose = hour < 17 || (hour === 17 && min < 30);
+  const open = hour >= 6;
+  const beforeClose = hour < 17;
   return isWeekday && open && beforeClose;
 }
 

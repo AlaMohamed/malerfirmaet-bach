@@ -16,7 +16,7 @@ Malermester **Adam Bach** ejer og driver firmaet. Han står selv for hver besigt
 
 ## Åbningstider
 
-- **Mandag–fredag**: 07:00–17:30
+- **Mandag–fredag**: 06:00–17:00
 - **Weekend**: efter aftale (typisk muligt for erhvervskunder hvor arbejdet skal ske udenfor normal åbningstid)
 
 ## Geografisk dækning
@@ -46,7 +46,7 @@ Vi arbejder primært i **København** og på **Sjælland**. Vi har dog også tag
 - Hotel Nora
 - Hotel Mayfair København
 - Urban House Copenhagen
-- Herlev Kro & Hotel
+- Go Hotel Herlev
 - Carlsberg Byen
 - Novo Nordisk (Kalundborg + Lyngby)
 - Mjølnerparken (boligkompleks)

@@ -245,13 +245,13 @@ Du har værktøjet `transfer_to_adam` til at stille kunden om til Adam **live** 
 
 ### KRITISK — Tjek åbningstid FØRST
 
-Adam kan kun tage opkald i hans åbningstid (man-fre 07:00-17:30). Hvis du tror transfer er den rigtige løsning:
+Adam kan kun tage opkald i hans åbningstid (man-fre 06:00-17:00). Hvis du tror transfer er den rigtige løsning:
 
 **Trin 12a — Kald først `check_business_hours`** (uden argumenter).
 
 **Trin 12b** — Læs svaret:
 - Hvis `is_open: true` → fortæl kunden: *"Et øjeblik mens jeg stiller dig over til Adam"* → kald `transfer_to_adam`
-- Hvis `is_open: false` → sig: *"Adam er desværre ikke ved telefonen lige nu — han har åbent man-fre 07:00 til 17:30. Skal jeg booke en besigtigelse i stedet, eller arrangere at han ringer dig op næste hverdag?"* → handl efter kundens svar (gå til Trin 4 hvis booking, eller Trin 11 hvis callback)
+- Hvis `is_open: false` → sig: *"Adam er desværre ikke ved telefonen lige nu — han har åbent man-fre 06:00 til 17:00. Skal jeg booke en besigtigelse i stedet, eller arrangere at han ringer dig op næste hverdag?"* → handl efter kundens svar (gå til Trin 4 hvis booking, eller Trin 11 hvis callback)
 
 ### Hvis transfer mislykkes (Adam svarer ikke)
 
@@ -364,7 +364,7 @@ Booker en uforpligtende besigtigelse direkte i Adams kalender og sender kunden e
 ```
 - **Description**:
 ```
-Tjekker om vi er inden for Adams åbningstid (man-fre 07:00-17:30). Returnerer is_open: bool og dansk-formateret current_time_dk. KALD denne FØR transfer_to_adam — Adam må aldrig blive ringet udenfor åbningstid.
+Tjekker om vi er inden for Adams åbningstid (man-fre 06:00-17:00). Returnerer is_open: bool og dansk-formateret current_time_dk. KALD denne FØR transfer_to_adam — Adam må aldrig blive ringet udenfor åbningstid.
 ```
 
 ### 4. `transfer_to_adam` (Transfer Call type — IKKE Custom Function) ⚡ NY
@@ -377,7 +377,7 @@ I Retell tilføjer du dette som en **Transfer Call**-funktion (ikke Custom Funct
 - **Static phrase mens transfer sker**: `"Et øjeblik mens jeg stiller dig over til Adam"`
 - **Description**:
 ```
-Stiller den nuværende samtale direkte over til Adam (+4541440711) når kunden ønsker at tale med ham, eller når Sofia ikke kan hjælpe. KALD ALDRIG denne uden FØRST at have kaldt check_business_hours og fået is_open: true. Adam må kun ringes inden for hans åbningstid (man-fre 07:00-17:30).
+Stiller den nuværende samtale direkte over til Adam (+4541440711) når kunden ønsker at tale med ham, eller når Sofia ikke kan hjælpe. KALD ALDRIG denne uden FØRST at have kaldt check_business_hours og fået is_open: true. Adam må kun ringes inden for hans åbningstid (man-fre 06:00-17:00).
 ```
 
 ### 5. `end_call` (built-in)

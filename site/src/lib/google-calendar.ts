@@ -21,14 +21,14 @@ const SCOPES = [
 
 const TZ = "Europe/Copenhagen";
 
-// Adam's working hours (Mon–Fri 07:00–17:30)
-// Effective bookable hours after 30-min buffer: 07:30 – 17:00
+// Adam's working hours (Mon–Fri 06:00–17:00)
+// Effective bookable hours after 30-min buffer: 06:30 – 16:30
 const WORKING_HOURS = {
   workDays: [1, 2, 3, 4, 5], // Mon=1 ... Fri=5 (JS getDay: Sun=0)
-  startHour: 7,
+  startHour: 6,
   startMinute: 30,
-  endHour: 17,
-  endMinute: 0,
+  endHour: 16,
+  endMinute: 30,
 };
 
 const BUFFER_MIN = 30;

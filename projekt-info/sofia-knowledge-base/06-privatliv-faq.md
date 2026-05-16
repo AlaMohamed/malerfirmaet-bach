@@ -95,7 +95,7 @@ Du kan også ringe direkte til Adam på 41 44 07 11.
 Op til **30 dage frem** via vores online system. Hvis du har brug for at booke længere ude, ring Adam direkte.
 
 ### Hvor hurtigt kan jeg blive ringet op?
-Inden for normal åbningstid (man-fre 07:00-17:30): **inden for 5 minutter**.
+Inden for normal åbningstid (man-fre 06:00-17:00): **inden for 5 minutter**.
 Uden for åbningstid: **næste hverdag morgen** så snart Adams arbejdsdag starter.
 
 ### Modtager jeg en bekræftelse på e-mail?

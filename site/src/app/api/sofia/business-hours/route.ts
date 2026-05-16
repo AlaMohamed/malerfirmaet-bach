@@ -8,7 +8,7 @@ import { authorizeSofia } from "@/lib/sofia-auth";
  * about transferring is server-side (LLMs can't reliably read clocks).
  *
  * Returns whether it's currently within Adam's working hours
- * (Mon–Fri 07:00–17:30 in Europe/Copenhagen), the human-readable current
+ * (Mon–Fri 06:00–17:00 in Europe/Copenhagen), the human-readable current
  * Danish time, and the next open window if currently closed.
  *
  * Sofia's prompt uses `is_open` to decide whether to call transfer_to_adam
@@ -45,15 +45,16 @@ function copenhagenParts(d: Date): DkParts {
 function isOpen(p: DkParts): boolean {
   if (p.weekday < 1 || p.weekday > 5) return false; // not Mon-Fri
   const minutes = p.hour * 60 + p.minute;
-  return minutes >= 7 * 60 && minutes < 17 * 60 + 30;
+  // Open window: 06:00 (inclusive) until 17:00 (exclusive).
+  return minutes >= 6 * 60 && minutes < 17 * 60;
 }
 
 function nextOpenDanishString(now: Date): string {
-  // Walk forward in 15-min increments until we hit Mon-Fri 07:00.
+  // Walk forward in 15-min increments until we hit Mon-Fri 06:00.
   for (let i = 0; i < 7 * 24 * 4; i++) {
     const d = new Date(now.getTime() + i * 15 * 60 * 1000);
     const p = copenhagenParts(d);
-    if (p.weekday >= 1 && p.weekday <= 5 && p.hour >= 7 && (p.hour < 17 || (p.hour === 17 && p.minute < 30))) {
+    if (p.weekday >= 1 && p.weekday <= 5 && p.hour >= 6 && p.hour < 17) {
       const fmt = new Intl.DateTimeFormat("da-DK", {
         timeZone: TZ,
         weekday: "long",
@@ -98,6 +99,6 @@ export async function POST(request: Request) {
     current_time_dk: currentTimeDk,
     next_open_dk: nextOpenDanishString(now),
     sofiaMessage:
-      "Adam er IKKE ved telefonen lige nu (uden for man-fre 07:00-17:30). Tilbyd kunden en booking i stedet — kald IKKE transfer_to_adam.",
+      "Adam er IKKE ved telefonen lige nu (uden for man-fre 06:00-17:00). Tilbyd kunden en booking i stedet — kald IKKE transfer_to_adam.",
   });
 }

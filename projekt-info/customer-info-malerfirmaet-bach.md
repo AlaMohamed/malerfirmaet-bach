@@ -17,7 +17,7 @@
 | **Hovedtelefon** | 41 44 07 11 |
 | **E-mail** | info@malerfirmaetbach.dk |
 | **Hjemmeside** | malerfirmaetbach.dk |
-| **Åbningstider** | Man–fre 07:00–17:30 (weekend efter aftale) |
+| **Åbningstider** | Man–fre 06:00–17:00 (weekend efter aftale) |
 
 ### Kontaktperson
 | Felt | Værdi |
@@ -130,7 +130,7 @@
 - Hotel Sanders
 - Hotel Nora
 - Urban House Copenhagen
-- Herlev Kro & Hotel
+- Go Hotel Herlev
 - Hotel Mayfair, København
 - Carlsberg Byen
 - Novo Nordisk (Kalundborg + Lyngby)
@@ -279,7 +279,7 @@ Den nuværende statiske side har kun en almindelig kontaktformular der sender ma
 5. Sofia sender kunden e-mail-bekræftelse med tidspunkt
 6. Status + kort opsummering gemmes i Airtable
 7. Hvis Sofia fejler/kunden tager ikke telefonen → Adam får automatisk besked og ringer manuelt
-8. **Følger åbningstider** (man–fre 07–17:30) — sen-aftens henvendelser udløser opkald først næste hverdag
+8. **Følger åbningstider** (man–fre 06–17) — sen-aftens henvendelser udløser opkald først næste hverdag
 
 **Flow B: "Vælg en tid selv"** — Calendly embed
 1. Calendly-kalender vises på siden
@@ -372,7 +372,7 @@ Den nuværende statiske side har kun en almindelig kontaktformular der sender ma
 | 14 | Case-sider: dedikerede pr. projekt (option B) | 2026-05-02 |
 | 15 | Logo + favicon modtaget og inkorporeret | 2026-05-02 |
 | 16 | Sofia (Retell AI) — booker direkte i kalender + sender bekræftelse | 2026-05-03 |
-| 17 | Sofia følger åbningstider (man-fre 07-17:30) | 2026-05-03 |
+| 17 | Sofia følger åbningstider (man-fre 06-17) | 2026-05-03 |
 | 18 | Call-recording OK med GDPR-samtykke | 2026-05-03 |
 | 19 | Sofia-fejl → Adam får besked og ringer manuelt | 2026-05-03 |
 | 20 | Notion erstatter Sanity (afventer arkitektur-svar) | 2026-05-03 |

@@ -20,7 +20,7 @@ export const company = {
   phoneE164: "+4541440711",
   email: "info@malerfirmaetbach.dk",
   hours: {
-    weekdays: "Man–fre 07:00–17:30",
+    weekdays: "Man–fre 06:00–17:00",
     weekend: "Weekend efter aftale",
   },
   url: "https://malerfirmaetbach.dk",
@@ -34,8 +34,8 @@ export const company = {
 export const hero = {
   eyebrow: "København & Sjælland",
   titleA: "Malerfirmaet bag",
-  titleB: "Radisson, Scandic",
-  titleC: "og Carlsberg Byen.",
+  titleB: "Novo Nordisk",
+  titleC: "og Go Hotel Herlev.",
   sub: "Erhvervs- og privatmaling i København og på Sjælland. Vi holder aftalt tid og pris — og kvaliteten ses på håndværket.",
   ctaPrimary: { label: "Book uforpligtende besigtigelse", href: "/book-besigtigelse" },
   ctaSecondary: { label: "Se projekter", href: "/projekter" },
@@ -141,13 +141,16 @@ export const testimonial = {
  * `logo` (optional) points to /public/images/partners/<file>.
  * `category` adds an editorial subtitle that shows on hover.
  */
-export const trustedBy = [
-  { name: "Radisson Blu Scandinavia", category: "Hotel", logo: "/images/partners/logo_radisson_tinted.png" },
-  { name: "Scandic Hvidovre",         category: "Hotel", logo: "/images/partners/logo_scandic_tinted.png" },
-  { name: "Carlsberg Byen",           category: "Bygherre", logo: "/images/partners/logo_carlsberg_byen.jpg" },
+// Optional `logo` per item — when omitted, the ticker renders the name in
+// elegant italic typography instead of a PNG/JPG. Explicit type annotation
+// so removing all logos doesn't narrow the array shape and break consumers.
+export const trustedBy: Array<{ name: string; category: string; logo?: string }> = [
+  { name: "Radisson Blu Scandinavia", category: "Hotel" },
+  { name: "Scandic Hvidovre",         category: "Hotel" },
+  { name: "Carlsberg Byen",           category: "Bygherre" },
   { name: "Novo Nordisk",             category: "Erhverv" },
   { name: "Hotel Mayfair",            category: "Hotel" },
-  { name: "Herlev Kro & Hotel",       category: "Hotel" },
+  { name: "Go Hotel Herlev",          category: "Hotel" },
   { name: "Hotel Sanders",            category: "Hotel" },
   { name: "Hotel Nora",               category: "Hotel" },
   { name: "Urban House Copenhagen",   category: "Hotel" },
@@ -165,7 +168,7 @@ export const clients = [
   "Hotel Sanders",
   "Hotel Nora",
   "Urban House Copenhagen",
-  "Herlev Kro & Hotel",
+  "Go Hotel Herlev",
   "Hotel Mayfair",
   "Carlsberg Byen",
   "Novo Nordisk",

@@ -82,7 +82,7 @@ export function SofiaCallback() {
           <p className="text-charcoal/70 text-sm leading-relaxed">
             {asap
               ? "Sofia ringer dig op fra et dansk +45-nummer nu. Sørg for at have din mobil i nærheden."
-              : "Sofia ringer dig fra et dansk +45-nummer så snart Adams arbejdsdag starter (man–fre fra kl. 07:00). Vi sender også en bekræftelses-email."}
+              : "Sofia ringer dig fra et dansk +45-nummer så snart Adams arbejdsdag starter (man–fre fra kl. 06:00). Vi sender også en bekræftelses-email."}
           </p>
         </div>
       </div>
@@ -164,7 +164,7 @@ export function SofiaCallback() {
         {status === "submitting" ? "Sender…" : "Ring mig op inden for 5 min"}
       </Button>
       <p className="text-[11px] text-charcoal/45 text-center">
-        Henvendelser uden for åbningstid (man–fre 07:00–17:30) besvares næste hverdag morgen.
+        Henvendelser uden for åbningstid (man–fre 06:00–17:00) besvares næste hverdag morgen.
       </p>
     </form>
   );

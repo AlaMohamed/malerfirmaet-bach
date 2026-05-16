@@ -31,9 +31,16 @@ export function Footer() {
               alt={company.name}
               width={682}
               height={243}
-              className="h-20 sm:h-24 lg:h-28 w-auto brightness-0 invert opacity-95 mb-7 -ml-1"
+              className="h-20 sm:h-24 lg:h-28 w-auto brightness-0 invert opacity-95 mb-3 -ml-1"
               priority={false}
             />
+            {/* Tagline rendered as styled text directly under the logo so it
+                visually reads as part of the lock-up. The PNG itself omits
+                the tagline; we render it here so we can keep it in sync
+                with company.tagline without touching the artwork. */}
+            <p className="font-serif italic text-cream-200/70 text-base sm:text-lg mb-6 -mt-1 ml-1">
+              {company.tagline}
+            </p>
             <p className="text-cream-200/55 text-sm leading-relaxed max-w-md">
               Professionel maling til erhverv og privat i {company.areas.join(" og ")}. Ordholdenhed er ikke et løfte — det er vores arbejdsmetode.
             </p>

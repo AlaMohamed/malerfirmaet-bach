@@ -46,13 +46,13 @@ export function Hero() {
             initial={{ opacity: 0, y: 26 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="font-serif text-white text-display-2xl text-balance"
+            className="font-serif text-white text-display-xl text-balance"
           >
             {hero.titleA}
             <br />
             <em className="not-italic text-brand-200">{hero.titleB}</em>
             <br />
-            og Carlsberg Byen.
+            {hero.titleC}
           </motion.h1>
 
           <motion.p

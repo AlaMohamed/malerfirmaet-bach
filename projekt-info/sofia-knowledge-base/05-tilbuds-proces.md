@@ -68,7 +68,7 @@ Tilbuddet er gyldigt i **30 dage** medmindre andet aftales.
 - Klargør materialer
 
 ### Under arbejdet
-- Vi starter til tiden hver morgen (typisk 07:00-08:00)
+- Vi starter til tiden hver morgen (typisk 06:00-08:00)
 - Vi **afdækker grundigt** alle flader der ikke skal males
 - Vi rydder op hver dag — ingen efterladt værktøj eller affald
 - Vi **kvalitetstjekker** undervejs — Adam eller en seniormaler godkender hver fase

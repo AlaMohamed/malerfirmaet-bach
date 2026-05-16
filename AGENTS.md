@@ -157,7 +157,7 @@ a new var, update both places.
 
 - Production phone: **+45 91 30 95 35** (Twilio SIP-trunk → Retell)
 - Agent: `agent_7d005d83b00f4c463a698e12cc`
-- Working hours: Mon–Fri 07:00–17:30 (enforced server-side)
+- Working hours: Mon–Fri 06:00–17:00 (enforced server-side)
 - `SOFIA_TEST_MODE=true` on Vercel currently — bypasses hours check for testing.
   **Remove before go-live to prevent night-time customer calls.**
 - Custom Functions endpoints:
