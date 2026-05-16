@@ -137,9 +137,18 @@ export function Footer() {
           <p>© {year} {company.name}. Alle rettigheder forbeholdes.</p>
           {/* Centered credit between the two existing elements — flex
               justify-between on three items puts left/center/right
-              automatically. On mobile they stack vertically. */}
+              automatically. On mobile they stack vertically. The Nordsales
+              name is a link to the agency's site. */}
           <p className="text-cream-200/30 tracking-wider order-last sm:order-none">
-            Designet af Nordsales
+            Designet af{" "}
+            <Link
+              href="https://www.nordsales.dk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline decoration-cream-200/20 underline-offset-2 hover:text-cream-200/60 hover:decoration-cream-200/40 transition-colors"
+            >
+              Nordsales
+            </Link>
           </p>
           <p className="tracking-wider">
             CVR {company.cvrFormatted} · {company.address.street} · {company.address.postal} {company.address.city}
