@@ -1,3 +1,5 @@
+import { withSentryConfig } from "@sentry/nextjs";
+
 /** @type {import('next').NextConfig} */
 
 // Content Security Policy — explicit whitelist of every external origin the
@@ -146,4 +148,31 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+// Wrap with Sentry. The wrapper:
+//   - injects source-map upload to Sentry at build time (needs
+//     SENTRY_AUTH_TOKEN; silently skipped when missing, so previews
+//     and local builds still work)
+//   - tunnels Sentry's ingest through /monitoring on our domain so
+//     ad-blockers (which often block *.sentry.io) don't drop client-
+//     side error events. Tunnel route is a Next.js Route Handler the
+//     wrapper auto-injects under .next/server.
+//   - hides the SDK from the public bundle a bit (no internal map
+//     URLs leaked to the browser).
+const sentryWebpackPluginOptions = {
+  org: "nordsales",
+  project: "malerfirmaet-bach",
+  // Suppress all logs in CI/build output
+  silent: !process.env.CI,
+  // Upload source maps only when an auth token is provided.
+  // Without it, Sentry still works but stack traces show minified code.
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  // Tunnel route — bypasses ad-blockers that block *.sentry.io.
+  // Sentry generates a /monitoring/* route handler automatically.
+  tunnelRoute: "/monitoring",
+  // Don't strip Sentry from the bundle in production — we want it.
+  disableLogger: true,
+  // Avoid leaking the SDK debug logs in client console.
+  hideSourceMaps: true,
+};
+
+export default withSentryConfig(nextConfig, sentryWebpackPluginOptions);

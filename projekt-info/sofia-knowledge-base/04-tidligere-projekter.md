@@ -11,7 +11,7 @@ Brug disse korte beskrivelser når en kunde spørger efter referencer eller ekse
 **Hvad vi lavede**: Renovering af receptionsområde, gange og udvalgte hotelværelser.
 **Særligt**: Arbejdet blev koordineret med hotellets driftschef, så maleropgaverne kunne udføres i perioder med lav belægning. Vi brugte støjsvagt værktøj og afdækkede grundigt, så gæsterne ikke blev forstyrret.
 
-### Herlev Kro & Hotel
+### Go Hotel Herlev
 **Type**: Totalrenovering af hotelværelser, gange og fællesarealer
 **Særligt**: Projektet blev gennemført uden for hotellets normale åbningstid for at minimere forstyrrelse af gæsterne.
 
