@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { CookieBanner } from "@/components/CookieBanner";
+import { GA4Analytics } from "@/components/GA4Analytics";
 import { company } from "@/content/site";
 
 const playfair = Playfair_Display({
@@ -78,6 +79,10 @@ export default function RootLayout({
             tracking cookies. */}
         <Analytics />
         <SpeedInsights />
+        {/* GA4 — gated by the cookie banner. Only loads after the user
+            clicks "Accepter alle" (or has done so on a previous visit).
+            See components/GA4Analytics.tsx for the consent wiring. */}
+        <GA4Analytics />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
