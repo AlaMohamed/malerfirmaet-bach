@@ -26,37 +26,30 @@ export function Footer() {
       <Container className="py-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
           <div className="md:col-span-5">
-            {/* Logo + tagline lockup, footer edition.
+            {/* Footer logo — re-uses the primary header logo (/logo.png),
+                which already includes the "Et ord er et ord" tagline as
+                part of the artwork, so no separate HTML tagline is
+                rendered here.
 
-                We re-use the primary header logo (/logo.png) at a larger
-                size and crop ~25% off the left side via aspect-ratio +
-                object-right + overflow-hidden. The cropped portion is the
-                paint-stroke icon; the remaining visible content is the
-                "MALERFIRMAET BACH ApS" wordmark, whose left edge now
-                aligns with the descriptive paragraph below.
+                The aspect-[25/10] container with object-cover object-right
+                + overflow-hidden trims a small slice off the left side of
+                the source PNG (the paint-stroke flourish) so the visible
+                wordmark + tagline align with the descriptive paragraph
+                below. Sizing is restrained — sized to balance against the
+                paragraph rather than dominate the footer column.
 
-                brightness-0 invert turns the multi-color source into a
-                solid white silhouette — matches the dark footer surface
-                while keeping us free to update the source logo without
-                re-exporting a footer-specific PNG.
-
-                The tagline tucks beneath the "Bach ApS" wordmark with a
-                tight negative top margin so the whole thing reads as one
-                logo lockup, identical to the primary brand logo. */}
-            <div className="mb-7">
-              <div className="relative aspect-[21/10] h-24 sm:h-32 lg:h-40 overflow-hidden">
-                <Image
-                  src="/logo.png"
-                  alt={company.name}
-                  fill
-                  priority={false}
-                  sizes="(max-width: 640px) 200px, (max-width: 1024px) 280px, 340px"
-                  className="object-cover object-right brightness-0 invert opacity-95"
-                />
-              </div>
-              <p className="font-serif italic text-cream-200/70 text-sm sm:text-base -mt-2 sm:-mt-3 tracking-wide">
-                {company.tagline}
-              </p>
+                brightness-0 invert opacity-95 converts the multi-color
+                source into a clean white silhouette for the charcoal
+                surface. */}
+            <div className="mb-7 relative aspect-[25/10] h-16 sm:h-20 lg:h-24 overflow-hidden">
+              <Image
+                src="/logo.png"
+                alt={company.name}
+                fill
+                priority={false}
+                sizes="(max-width: 640px) 160px, (max-width: 1024px) 200px, 240px"
+                className="object-cover object-right brightness-0 invert opacity-95"
+              />
             </div>
             <p className="text-cream-200/55 text-sm leading-relaxed max-w-md">
               Professionel maling til erhverv og privat i {company.areas.join(" og ")}. Ordholdenhed er ikke et løfte — det er vores arbejdsmetode.
