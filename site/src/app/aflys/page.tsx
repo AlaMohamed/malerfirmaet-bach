@@ -16,12 +16,14 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
+// Next.js 15+ wraps searchParams in a Promise — await it before reading.
 interface SearchParams {
-  searchParams: { token?: string };
+  searchParams: Promise<{ token?: string }>;
 }
 
 export default async function AflysPage({ searchParams }: SearchParams) {
-  const token = searchParams?.token ?? "";
+  const sp = await searchParams;
+  const token = sp?.token ?? "";
   const payload = token ? verifyCancelToken(token) : null;
 
   if (!payload) {

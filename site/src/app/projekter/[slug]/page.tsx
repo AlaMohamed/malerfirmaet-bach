@@ -15,10 +15,15 @@ export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }
 
-export function generateMetadata(
-  { params }: { params: { slug: string } },
-): Metadata {
-  const p = getProject(params.slug);
+// Next.js 15+ made dynamic-route `params` async (a Promise). The old
+// sync `params.slug` access still type-checked but silently produced a
+// 404 in production. Both the metadata function and the page must now
+// be async and await the params.
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> },
+): Promise<Metadata> {
+  const { slug } = await params;
+  const p = getProject(slug);
   if (!p) return { title: "Projekt ikke fundet" };
   return {
     title: `${p.title} — ${p.categoryLabel}`,
@@ -31,8 +36,9 @@ export function generateMetadata(
   };
 }
 
-export default function ProjectPage({ params }: { params: { slug: string } }) {
-  const project = getProject(params.slug);
+export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const project = getProject(slug);
   if (!project) notFound();
 
   return (
