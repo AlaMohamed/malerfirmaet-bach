@@ -26,21 +26,35 @@ export function Footer() {
       <Container className="py-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
           <div className="md:col-span-5">
-            {/* Logo + tagline as one lockup. The footer-logo PNG ends with
-                the "Bach ApS" wordmark — we tuck the tagline immediately
-                beneath it so it reads as a single logo unit, like the
-                primary brand logo where the tagline sits under "Bach ApS"
-                (here in white to match the inverted PNG). */}
-            <div className="mb-7 -ml-1">
-              <Image
-                src="/logo-footer.png"
-                alt={company.name}
-                width={682}
-                height={243}
-                className="h-20 sm:h-24 lg:h-28 w-auto brightness-0 invert opacity-95"
-                priority={false}
-              />
-              <p className="font-serif italic text-cream-200/70 text-sm sm:text-base -mt-3 sm:-mt-4 ml-3 sm:ml-4 tracking-wide">
+            {/* Logo + tagline lockup, footer edition.
+
+                We re-use the primary header logo (/logo.png) at a larger
+                size and crop ~25% off the left side via aspect-ratio +
+                object-right + overflow-hidden. The cropped portion is the
+                paint-stroke icon; the remaining visible content is the
+                "MALERFIRMAET BACH ApS" wordmark, whose left edge now
+                aligns with the descriptive paragraph below.
+
+                brightness-0 invert turns the multi-color source into a
+                solid white silhouette — matches the dark footer surface
+                while keeping us free to update the source logo without
+                re-exporting a footer-specific PNG.
+
+                The tagline tucks beneath the "Bach ApS" wordmark with a
+                tight negative top margin so the whole thing reads as one
+                logo lockup, identical to the primary brand logo. */}
+            <div className="mb-7">
+              <div className="relative aspect-[21/10] h-24 sm:h-32 lg:h-40 overflow-hidden">
+                <Image
+                  src="/logo.png"
+                  alt={company.name}
+                  fill
+                  priority={false}
+                  sizes="(max-width: 640px) 200px, (max-width: 1024px) 280px, 340px"
+                  className="object-cover object-right brightness-0 invert opacity-95"
+                />
+              </div>
+              <p className="font-serif italic text-cream-200/70 text-sm sm:text-base -mt-2 sm:-mt-3 tracking-wide">
                 {company.tagline}
               </p>
             </div>
