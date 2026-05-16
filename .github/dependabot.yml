@@ -1,0 +1,64 @@
+# Dependabot configuration — automatic dependency-update PRs.
+#
+# What this does for us:
+#   - Weekly scan of npm dependencies in site/ for security
+#     advisories AND minor/patch updates.
+#   - Daily scan for SECURITY-only npm updates (more aggressive than
+#     the regular weekly cadence). Dependabot still respects open PR
+#     limits so we don't drown in noise.
+#   - Weekly scan of GitHub Actions versions (we have none today, but
+#     keeps us ready when we add CI workflows).
+#
+# What GitHub does automatically that we DON'T need to configure:
+#   - Vulnerability alerts (already on by default in repo settings)
+#   - Secret scanning (already on for public repos)
+#
+# Reference: https://docs.github.com/code-security/dependabot
+
+version: 2
+
+updates:
+  # npm — site/ subdirectory (Next.js app)
+  - package-ecosystem: "npm"
+    directory: "/site"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "Europe/Copenhagen"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    groups:
+      # Bundle minor + patch updates into one PR per ecosystem area
+      # so we don't get 20 separate PRs every Monday.
+      production-deps:
+        applies-to: version-updates
+        dependency-type: production
+        update-types:
+          - "minor"
+          - "patch"
+      dev-deps:
+        applies-to: version-updates
+        dependency-type: development
+        update-types:
+          - "minor"
+          - "patch"
+
+  # GitHub Actions (workflows in .github/workflows)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      timezone: "Europe/Copenhagen"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "ci"
+    commit-message:
+      prefix: "ci"

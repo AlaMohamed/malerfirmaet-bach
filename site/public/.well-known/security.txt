@@ -1,0 +1,5 @@
+Contact: mailto:info@malerfirmaetbach.dk
+Expires: 2027-05-16T00:00:00.000Z
+Preferred-Languages: da, en
+Canonical: https://malerfirmaetbach.dk/.well-known/security.txt
+Policy: https://malerfirmaetbach.dk/privatlivspolitik
